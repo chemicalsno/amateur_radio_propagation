@@ -4,6 +4,14 @@
 
 No unreleased changes.
 
+## [2.1.0] - 2026-05-02
+
+### Added
+
+- State translations for HF band conditions (Good, Fair, Poor, Band Closed) and G/S/R storm scales (G0–G5, S0–S5, R0–R5) so state-based icons resolve correctly.
+- Signal-bar icons for HF band conditions; full bars for Good, partial for Fair, low for Poor.
+- CI workflow (lint, type check, tests) and semantic PR title validation.
+
 ## [2.0.0] - 2026-05-02
 
 Initial public release.
