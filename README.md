@@ -194,7 +194,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for implementation details and 
 
 ## Requirements
 
-- Home Assistant version at or above `min_ha_version` in `manifest.json`
+- Home Assistant 2024.5.0 or later
 - No extra runtime Python packages beyond Home Assistant's bundled stack
 
 ## License

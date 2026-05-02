@@ -27,5 +27,5 @@ Surfaces real-time amateur radio propagation data as Home Assistant sensors.
 
 ## Requirements
 
-- Home Assistant — see `min_ha_version` in `manifest.json`
+- Home Assistant 2024.5.0 or later
 - No additional packages required

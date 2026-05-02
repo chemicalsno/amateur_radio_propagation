@@ -139,7 +139,7 @@
     },
     "stale_noaa": {
       "title": "NOAA solar data is unavailable",
-      "description": "The integration has been unable to reach NOAA SWPC (services.swpc.noaa.gov) for over an hour. Solar sensors are showing stale data. Check your internet connection or visit [NOAA SWPC status](https://www.swpc.noaa.gov/) for outage information."
+      "description": "The integration has been unable to reach NOAA SWPC (services.swpc.noaa.gov) for over an hour. Solar sensors are showing stale data. Check your internet connection or visit [NOAA SWPC status]({url}) for outage information."
     }
   }
 }

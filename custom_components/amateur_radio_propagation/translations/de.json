@@ -63,7 +63,7 @@
   "issues": {
     "stale_noaa": {
       "title": "NOAA solar data is unavailable",
-      "description": "The integration has been unable to reach NOAA SWPC for over an hour. Solar sensors are showing stale data. Check your internet connection or visit the NOAA SWPC website for outage information."
+      "description": "The integration has been unable to reach NOAA SWPC for over an hour. Solar sensors are showing stale data. Check your internet connection or visit [NOAA SWPC status]({url}) for outage information."
     },
     "stale_station_data": {
       "title": "Ionosonden-Stationsdaten sind veraltet",

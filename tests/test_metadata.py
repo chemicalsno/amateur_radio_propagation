@@ -146,11 +146,11 @@ def test_quality_scale_yaml_is_valid_without_duplicate_keys() -> None:
 
 
 def test_hacs_and_manifest_versions_are_consistent() -> None:
-    """HACS and manifest metadata agree on supported HA and integration version."""
+    """HACS and manifest metadata expose release and compatibility versions."""
     hacs = _load_json(ROOT / "hacs.json")
     manifest = _load_json(INTEGRATION / "manifest.json")
 
-    assert hacs["homeassistant"] == manifest["min_ha_version"]
+    assert hacs["homeassistant"] == "2024.5.0"
     assert manifest["version"] == VERSION
 
 

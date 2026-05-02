@@ -544,6 +544,9 @@ class SolarCoordinator(DataUpdateCoordinator[dict[str, Any]]):  # type: ignore[m
                 is_fixable=False,
                 severity=IssueSeverity.WARNING,
                 translation_key="stale_noaa",
+                translation_placeholders={
+                    "url": "https://www.swpc.noaa.gov/",
+                },
             )
         else:
             async_delete_issue(self.hass, DOMAIN, "stale_noaa")

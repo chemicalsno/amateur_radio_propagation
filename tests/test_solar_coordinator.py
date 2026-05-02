@@ -669,6 +669,9 @@ async def test_repair_issue_raised_when_noaa_stale(hass):
     mock_create.assert_called_once()
     call_kwargs = mock_create.call_args
     assert call_kwargs.args[2] == "stale_noaa"
+    assert call_kwargs.kwargs["translation_placeholders"]["url"] == (
+        "https://www.swpc.noaa.gov/"
+    )
 
 
 async def test_repair_issue_cleared_when_noaa_fresh(hass):
