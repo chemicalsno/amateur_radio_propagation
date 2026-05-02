@@ -1,0 +1,86 @@
+# Amateur Radio Propagation — MUF Station Dashboard
+#
+# No custom cards required.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - MUF Station
+views:
+  - title: Ionosonde
+    path: muf-station
+    icon: mdi:chart-bell-curve
+    cards:
+      - type: markdown
+        content: |
+          # Ionosonde - IF843
+          Station-centered view for local MUF, critical frequencies, layer height, confidence, and data freshness.
+
+      - type: grid
+        title: Primary Readings
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: MUF
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_fof2_if843
+            name: foF2
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_foe_if843
+            name: foE
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_foes_if843
+            name: foEs
+
+      - type: grid
+        title: Confidence and Structure
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_cs_if843
+            name: Confidence
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_tec_if843
+            name: TEC
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_hmf2_if843
+            name: hmF2
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2
+
+      - type: entities
+        title: Optional Station Diagnostics
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_hf_hme_if843
+            name: hmE
+          - entity: sensor.amateur_radio_propagation_solar_hf_fof1_if843
+            name: foF1
+          - entity: sensor.amateur_radio_propagation_solar_hf_hmf1_if843
+            name: hmF1
+          - entity: sensor.amateur_radio_propagation_solar_hf_scalef2_if843
+            name: Scale Height F2
+          - entity: sensor.amateur_radio_propagation_solar_hf_yf2_if843
+            name: yF2
+
+      - type: entities
+        title: Freshness and Context
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: kc2g last update
+            secondary_info: last-updated
+          - entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: Solar Flux
+          - entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+          - entity: sensor.amateur_radio_propagation_solar_xray
+            name: X-Ray
+
+      - type: markdown
+        content: |
+          ## Reading the Station
+          MUF is derived from the local ionosonde profile and is most useful as a nearby sounding cue.
+          foEs can hint at sporadic-E support, while confidence helps decide how much weight to put on the reading.

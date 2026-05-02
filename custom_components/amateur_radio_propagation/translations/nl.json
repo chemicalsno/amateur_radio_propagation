@@ -1,0 +1,73 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Amateurradio propagatie",
+        "data": {
+          "choice": "Gegevenstype"
+        },
+        "data_description": {
+          "choice": "Kies globale zonnepropagatiegegevens of MUF-gegevens van een specifieke ionosonde-station."
+        }
+      },
+      "station": {
+        "title": "Selecteer ionosonde-station",
+        "data": {
+          "user_muf_station_code": "Station"
+        },
+        "data_description": {
+          "user_muf_station_code": "Kies het ionosonde-station voor MUF- en ionosferische-laagsensoren."
+        }
+      },
+      "reconfigure": {
+        "title": "Ionosonde-station wijzigen",
+        "data": {
+          "user_muf_station_code": "Station"
+        },
+        "data_description": {
+          "user_muf_station_code": "Kies het vervangende ionosonde-station voor deze MUF-vermelding."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Al geconfigureerd",
+      "cannot_connect": "Kan geen verbinding maken met de statielijst",
+      "reconfigure_not_supported": "Zonnedata-vermeldingen kunnen niet opnieuw worden geconfigureerd",
+      "reconfigure_successful": "Station succesvol bijgewerkt"
+    },
+    "error": {
+      "invalid_station": "Ongeldige stationselectie"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Statie-opties",
+        "data": {
+          "stale_hours": "Drempelwaarde voor verouderde gegevens"
+        },
+        "data_description": {
+          "stale_hours": "Hoelang voordat stationgegevens als verouderd worden beschouwd en er een reparatieprobleem wordt gemeld."
+        }
+      }
+    },
+    "abort": {
+      "no_options": "Zonnedata-vermeldingen hebben geen configureerbare opties"
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Kan geen verbinding maken met de kc2g-statielijst"
+    }
+  },
+  "issues": {
+    "stale_noaa": {
+      "title": "NOAA solar data is unavailable",
+      "description": "The integration has been unable to reach NOAA SWPC for over an hour. Solar sensors are showing stale data. Check your internet connection or visit the NOAA SWPC website for outage information."
+    },
+    "stale_station_data": {
+      "title": "Ionosonde-stationgegevens zijn verouderd",
+      "description": "Het ionosonde-station **{station_name}** ({station_code}) heeft geen verse gegevens ontvangen. Laatste update: {last_time}. Overweeg een ander station te selecteren op de [integratieconfiguratiepagina]({url})."
+    }
+  }
+}

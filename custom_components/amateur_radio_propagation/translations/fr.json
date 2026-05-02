@@ -1,0 +1,73 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Propagation radio amateur",
+        "data": {
+          "choice": "Type de données"
+        },
+        "data_description": {
+          "choice": "Choisissez les données globales de propagation solaire ou les données MUF d'une station ionosonde spécifique."
+        }
+      },
+      "station": {
+        "title": "Sélectionner une station ionosonde",
+        "data": {
+          "user_muf_station_code": "Station"
+        },
+        "data_description": {
+          "user_muf_station_code": "Choisissez la station ionosonde utilisée pour les capteurs MUF et de couches ionosphériques."
+        }
+      },
+      "reconfigure": {
+        "title": "Changer de station ionosonde",
+        "data": {
+          "user_muf_station_code": "Station"
+        },
+        "data_description": {
+          "user_muf_station_code": "Choisissez la station ionosonde de remplacement pour cette entrée MUF."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Déjà configuré",
+      "cannot_connect": "Impossible de se connecter à la liste des stations",
+      "reconfigure_not_supported": "Les entrées de données solaires ne peuvent pas être reconfigurées",
+      "reconfigure_successful": "Station mise à jour avec succès"
+    },
+    "error": {
+      "invalid_station": "Sélection de station non valide"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options de station",
+        "data": {
+          "stale_hours": "Seuil de données obsolètes"
+        },
+        "data_description": {
+          "stale_hours": "Durée avant que les données de la station soient considérées comme obsolètes et qu'un problème de réparation soit signalé."
+        }
+      }
+    },
+    "abort": {
+      "no_options": "Les entrées de données solaires n'ont pas d'options configurables"
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Impossible de se connecter à la liste des stations kc2g"
+    }
+  },
+  "issues": {
+    "stale_noaa": {
+      "title": "NOAA solar data is unavailable",
+      "description": "The integration has been unable to reach NOAA SWPC for over an hour. Solar sensors are showing stale data. Check your internet connection or visit the NOAA SWPC website for outage information."
+    },
+    "stale_station_data": {
+      "title": "Les données de la station ionosonde sont obsolètes",
+      "description": "La station ionosonde **{station_name}** ({station_code}) n'a pas reçu de données récentes. Dernière mise à jour : {last_time}. Envisagez de sélectionner une autre station depuis la [page de configuration de l'intégration]({url})."
+    }
+  }
+}

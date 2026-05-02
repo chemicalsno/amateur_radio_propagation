@@ -1,0 +1,74 @@
+rules:
+  action-setup:
+    status: exempt
+    comment: Integration provides no actions.
+  appropriate-polling: done
+  brands:
+    status: todo
+    comment: Requires a PR to home-assistant/brands with icon assets.
+  common-modules: done
+  config-flow: done
+  config-flow-test-coverage: done
+  dependency-transparency: done
+  docs-actions:
+    status: exempt
+    comment: Integration provides no actions.
+  docs-high-level-description: done
+  docs-installation-instructions: done
+  docs-removal-instructions: done
+  entity-event-setup:
+    status: exempt
+    comment: Entities use DataUpdateCoordinator; no manual event subscriptions.
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
+  test-before-configure: done
+  test-before-setup: done
+  unique-config-entry: done
+
+  action-exceptions:
+    status: exempt
+  config-entry-unloading: done
+  docs-configuration-parameters: done
+  docs-installation-parameters: done
+  entity-unavailable: done
+  integration-owner: done
+  log-when-unavailable: done
+  parallel-updates: done
+  reauthentication-flow:
+    status: exempt
+    comment: No authentication required.
+  test-coverage: done
+
+  devices: done
+  diagnostics: done
+  discovery:
+    status: exempt
+  discovery-update-info:
+    status: exempt
+  docs-data-update: done
+  docs-examples: done
+  docs-known-limitations: done
+  docs-supported-devices:
+    status: exempt
+  docs-supported-functions: done
+  docs-troubleshooting: done
+  docs-use-cases: done
+  dynamic-devices:
+    status: exempt
+  entity-category: done
+  entity-device-class: done
+  entity-disabled-by-default: done
+  entity-translations: done
+  exception-translations: done
+  icon-translations: done
+  reconfiguration-flow: done
+  repair-issues: done
+  stale-devices:
+    status: exempt
+
+  async-dependency: done
+  inject-websession: done
+  strict-typing:
+    status: done
+    comment: pyrightconfig.json added with typeCheckingMode strict.

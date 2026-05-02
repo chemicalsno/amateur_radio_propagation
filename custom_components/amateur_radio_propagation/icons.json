@@ -1,0 +1,173 @@
+{
+  "entity": {
+    "sensor": {
+      "solar_flux_index":       { "default": "mdi:weather-sunny-alert" },
+      "solar_sunspots":         { "default": "mdi:weather-sunny-alert" },
+      "solar_a_index":          { "default": "mdi:alpha-a" },
+      "solar_k_index":          { "default": "mdi:alpha-k" },
+      "solar_k_index_nighttime":{ "default": "mdi:alpha-k" },
+      "solar_bz":               { "default": "mdi:sun-compass" },
+      "solar_wind":             { "default": "mdi:sun-wireless" },
+      "solar_fof2":             { "default": "mdi:format-vertical-align-top" },
+      "solar_xray":             { "default": "mdi:flare" },
+      "solar_xray_scale":       { "default": "mdi:chart-bell-curve" },
+      "solar_geomag_storm": {
+        "default": "mdi:earth",
+        "state": {
+          "G0": "mdi:earth",
+          "G1": "mdi:earth-arrow-up",
+          "G2": "mdi:earth-arrow-up",
+          "G3": "mdi:alert-circle",
+          "G4": "mdi:alert-circle",
+          "G5": "mdi:alert-octagon"
+        }
+      },
+      "solar_radiation_storm": {
+        "default": "mdi:atom",
+        "state": {
+          "S0": "mdi:atom",
+          "S1": "mdi:atom",
+          "S2": "mdi:alert-circle",
+          "S3": "mdi:alert-circle",
+          "S4": "mdi:alert-octagon",
+          "S5": "mdi:alert-octagon"
+        }
+      },
+      "solar_radio_blackout": {
+        "default": "mdi:radio-tower",
+        "state": {
+          "R0": "mdi:radio-tower",
+          "R1": "mdi:radio-tower",
+          "R2": "mdi:alert-circle",
+          "R3": "mdi:alert-circle",
+          "R4": "mdi:alert-octagon",
+          "R5": "mdi:alert-octagon"
+        }
+      },
+      "solar_xray_peak_class":  { "default": "mdi:chart-line-variant" },
+      "solar_xray_begin_class": { "default": "mdi:arrow-up-bold" },
+      "solar_xray_end_class":   { "default": "mdi:arrow-down-bold" },
+      "solar_xray_current_ratio":{ "default": "mdi:chart-bell-curve" },
+      "solar_geomag_field":     { "default": "mdi:compass" },
+      "solar_sig_noise_lvl":    { "default": "mdi:signal-cellular-2" },
+      "solar_proton_flux":      { "default": "mdi:atom" },
+      "solar_electron_flux":    { "default": "mdi:atom" },
+      "solar_helium_line":      { "default": "mdi:atom-variant" },
+      "solar_aurora_activity":  { "default": "mdi:weather-night" },
+      "solar_aurora_latitude":  { "default": "mdi:earth" },
+      "solar_vhf_aurora":       { "default": "mdi:weather-night" },
+      "solar_vhf_eskip_eu":     { "default": "mdi:sine-wave" },
+      "solar_vhf_eskip_na":     { "default": "mdi:sine-wave" },
+      "solar_vhf_eskip_eu_6m":  { "default": "mdi:sine-wave" },
+      "solar_vhf_eskip_eu_4m":  { "default": "mdi:sine-wave" },
+      "solar_hf_80_40_day": {
+        "default": "mdi:sine-wave",
+        "state": {
+          "Good":        "mdi:signal-cellular-3",
+          "Fair":        "mdi:signal-cellular-2",
+          "Poor":        "mdi:signal-cellular-1",
+          "Band Closed": "mdi:signal-off"
+        }
+      },
+      "solar_hf_30_20_day": {
+        "default": "mdi:sine-wave",
+        "state": {
+          "Good":        "mdi:signal-cellular-3",
+          "Fair":        "mdi:signal-cellular-2",
+          "Poor":        "mdi:signal-cellular-1",
+          "Band Closed": "mdi:signal-off"
+        }
+      },
+      "solar_hf_17_15_day": {
+        "default": "mdi:sine-wave",
+        "state": {
+          "Good":        "mdi:signal-cellular-3",
+          "Fair":        "mdi:signal-cellular-2",
+          "Poor":        "mdi:signal-cellular-1",
+          "Band Closed": "mdi:signal-off"
+        }
+      },
+      "solar_hf_12_10_day": {
+        "default": "mdi:sine-wave",
+        "state": {
+          "Good":        "mdi:signal-cellular-3",
+          "Fair":        "mdi:signal-cellular-2",
+          "Poor":        "mdi:signal-cellular-1",
+          "Band Closed": "mdi:signal-off"
+        }
+      },
+      "solar_hf_80_40_night": {
+        "default": "mdi:sine-wave",
+        "state": {
+          "Good":        "mdi:signal-cellular-3",
+          "Fair":        "mdi:signal-cellular-2",
+          "Poor":        "mdi:signal-cellular-1",
+          "Band Closed": "mdi:signal-off"
+        }
+      },
+      "solar_hf_30_20_night": {
+        "default": "mdi:sine-wave",
+        "state": {
+          "Good":        "mdi:signal-cellular-3",
+          "Fair":        "mdi:signal-cellular-2",
+          "Poor":        "mdi:signal-cellular-1",
+          "Band Closed": "mdi:signal-off"
+        }
+      },
+      "solar_hf_17_15_night": {
+        "default": "mdi:sine-wave",
+        "state": {
+          "Good":        "mdi:signal-cellular-3",
+          "Fair":        "mdi:signal-cellular-2",
+          "Poor":        "mdi:signal-cellular-1",
+          "Band Closed": "mdi:signal-off"
+        }
+      },
+      "solar_hf_12_10_night": {
+        "default": "mdi:sine-wave",
+        "state": {
+          "Good":        "mdi:signal-cellular-3",
+          "Fair":        "mdi:signal-cellular-2",
+          "Poor":        "mdi:signal-cellular-1",
+          "Band Closed": "mdi:signal-off"
+        }
+      },
+      "solar_kp_estimated":  { "default": "mdi:alpha-k" },
+      "solar_flare_prob_m1": { "default": "mdi:flare" },
+      "solar_flare_prob_x1": { "default": "mdi:flare" },
+      "solar_flare_prob_m3": { "default": "mdi:flare" },
+      "solar_flare_prob_x3": { "default": "mdi:flare" },
+      "solar_pca":           { "default": "mdi:earth-arrow-up" },
+      "solar_alert_count": {
+        "default": "mdi:bell-alert",
+        "state": {
+          "0": "mdi:bell-outline"
+        }
+      },
+      "solar_wind_density":        { "default": "mdi:weather-windy" },
+      "solar_wind_speed_noaa":     { "default": "mdi:sun-wireless" },
+      "solar_bz_noaa":             { "default": "mdi:sun-compass" },
+      "solar_wind_bt":             { "default": "mdi:magnet" },
+      "solar_kp_forecast":         { "default": "mdi:alpha-k" },
+      "solar_dst":                 { "default": "mdi:earth-arrow-down" },
+      "solar_a_index_predicted":   { "default": "mdi:alpha-a" },
+      "solar_a_index_predicted_2d":{ "default": "mdi:alpha-a" },
+      "solar_a_index_predicted_3d":{ "default": "mdi:alpha-a" },
+      "solar_flux_predicted":      { "default": "mdi:weather-sunny-alert" },
+      "solar_active_regions":      { "default": "mdi:sun-clock" },
+      "hf_muf":     { "default": "mdi:format-wrap-top-bottom" },
+      "hf_fof2":    { "default": "mdi:format-vertical-align-top" },
+      "hf_foe":     { "default": "mdi:format-wrap-inline" },
+      "hf_foes":    { "default": "mdi:waveform" },
+      "hf_fof1":    { "default": "mdi:format-vertical-align-top" },
+      "hf_cs":      { "default": "mdi:percent-box-outline" },
+      "hf_tec":     { "default": "mdi:atom-variant" },
+      "hf_hmf2":    { "default": "mdi:altimeter" },
+      "hf_hme":     { "default": "mdi:altimeter" },
+      "hf_hmf1":    { "default": "mdi:altimeter" },
+      "hf_md":      { "default": "mdi:function-variant" },
+      "hf_scalef2": { "default": "mdi:ruler" },
+      "hf_yf2":     { "default": "mdi:ruler" }
+    }
+  }
+}

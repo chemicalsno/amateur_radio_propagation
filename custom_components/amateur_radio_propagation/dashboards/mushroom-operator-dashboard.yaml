@@ -1,0 +1,123 @@
+# Amateur Radio Propagation — Mushroom Operator Dashboard
+#
+# Requires:
+#   - custom:mushroom-title-card
+#   - custom:mushroom-chips-card
+#   - custom:mushroom-entity-card
+#   - custom:mushroom-template-card
+#
+# Install Mushroom via HACS → Frontend.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - Mushroom
+views:
+  - title: Operator
+    path: mushroom-operator
+    icon: mdi:radio-handheld
+    cards:
+      - type: custom:mushroom-title-card
+        title: Amateur Radio Propagation
+        subtitle: Operator console
+
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: entity
+            entity: sensor.amateur_radio_propagation_solar_alert_count
+            name: Alerts
+          - type: entity
+            entity: sensor.amateur_radio_propagation_solar_xray
+            name: X-Ray
+          - type: entity
+            entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+          - type: entity
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: MUF
+
+      - type: grid
+        title: Solar and Geomagnetic
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: Solar Flux
+            icon: mdi:weather-sunny-alert
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_sunspots
+            name: Sunspots
+            icon: mdi:weather-sunny
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_k_index
+            name: K Index
+            icon: mdi:alpha-k
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: Bz
+            icon: mdi:sun-compass
+
+      - type: grid
+        title: HF Go / No-Go
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-template-card
+            entity: sensor.amateur_radio_propagation_solar_hf_80_40_day
+            primary: 40m / 80m Day
+            secondary: "{{ states(entity) }}"
+            icon: mdi:radio-tower
+            tap_action:
+              action: more-info
+          - type: custom:mushroom-template-card
+            entity: sensor.amateur_radio_propagation_solar_hf_30_20_day
+            primary: 20m / 30m Day
+            secondary: "{{ states(entity) }}"
+            icon: mdi:radio-tower
+            tap_action:
+              action: more-info
+          - type: custom:mushroom-template-card
+            entity: sensor.amateur_radio_propagation_solar_hf_17_15_day
+            primary: 15m / 17m Day
+            secondary: "{{ states(entity) }}"
+            icon: mdi:radio-tower
+            tap_action:
+              action: more-info
+          - type: custom:mushroom-template-card
+            entity: sensor.amateur_radio_propagation_solar_hf_12_10_day
+            primary: 10m / 12m Day
+            secondary: "{{ states(entity) }}"
+            icon: mdi:radio-tower
+            tap_action:
+              action: more-info
+
+      - type: grid
+        title: Forecast
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+            icon: mdi:weather-sunny-alert
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: Predicted A-Index
+            icon: mdi:alpha-a
+
+      - type: grid
+        title: Station and VHF
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: Local MUF
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_hf_foes_if843
+            name: Local foEs
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_vhf_aurora
+            name: VHF Aurora
+          - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na
+            name: E-Skip NA

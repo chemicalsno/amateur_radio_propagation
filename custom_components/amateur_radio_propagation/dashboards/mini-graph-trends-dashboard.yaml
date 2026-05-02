@@ -1,0 +1,91 @@
+# Amateur Radio Propagation — Mini Graph Trends Dashboard
+#
+# Requires:
+#   - custom:mini-graph-card
+#
+# Install Mini Graph Card via HACS → Frontend.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - Mini Graph Trends
+views:
+  - title: Trends
+    path: mini-graph-trends
+    icon: mdi:chart-line
+    cards:
+      - type: markdown
+        content: |
+          # Propagation Trends
+          Trend-focused view for recorder-backed history. Graphs are most useful after Home Assistant has collected data for a day or more.
+
+      - type: custom:mini-graph-card
+        name: Solar Activity
+        hours_to_show: 72
+        points_per_hour: 1
+        show:
+          legend: true
+          extrema: true
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: SFI
+          - entity: sensor.amateur_radio_propagation_solar_sunspots
+            name: Sunspots
+
+      - type: custom:mini-graph-card
+        name: Geomagnetic Disturbance
+        hours_to_show: 48
+        points_per_hour: 2
+        show:
+          legend: true
+          extrema: true
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_k_index
+            name: K
+          - entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+          - entity: sensor.amateur_radio_propagation_solar_a_index
+            name: A
+
+      - type: custom:mini-graph-card
+        name: Local Ionosonde
+        hours_to_show: 48
+        points_per_hour: 2
+        show:
+          legend: true
+          extrema: true
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: MUF
+          - entity: sensor.amateur_radio_propagation_solar_hf_fof2_if843
+            name: foF2
+
+      - type: conditional
+        conditions:
+          - entity: sensor.amateur_radio_propagation_solar_hf_tec_if843
+            state_not: unavailable
+          - entity: sensor.amateur_radio_propagation_solar_hf_tec_if843
+            state_not: unknown
+        card:
+          type: custom:mini-graph-card
+          name: Local TEC
+          hours_to_show: 48
+          points_per_hour: 2
+          show:
+            extrema: true
+          entities:
+            - entity: sensor.amateur_radio_propagation_solar_hf_tec_if843
+              name: TEC
+
+      - type: custom:mini-graph-card
+        name: X-Ray and Flare Forecast
+        hours_to_show: 48
+        points_per_hour: 2
+        show:
+          legend: true
+          extrema: true
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_xray_scale
+            name: X-Ray Scale
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m1
+            name: M 1d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x1
+            name: X 1d

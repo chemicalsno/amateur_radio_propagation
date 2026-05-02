@@ -1,0 +1,145 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Amateur Radio Propagation",
+        "data": {
+          "choice": "Data type"
+        },
+        "data_description": {
+          "choice": "Choose global solar propagation data or MUF data from a specific ionosonde station."
+        }
+      },
+      "station": {
+        "title": "Select ionosonde station",
+        "data": {
+          "user_muf_station_code": "Station"
+        },
+        "data_description": {
+          "user_muf_station_code": "Choose the ionosonde station used for MUF and ionospheric layer sensors."
+        }
+      },
+      "reconfigure": {
+        "title": "Change ionosonde station",
+        "data": {
+          "user_muf_station_code": "Station"
+        },
+        "data_description": {
+          "user_muf_station_code": "Choose the replacement ionosonde station for this MUF entry."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Already configured",
+      "cannot_connect": "Cannot connect to station list",
+      "reconfigure_not_supported": "Solar data entries cannot be reconfigured",
+      "reconfigure_successful": "Station updated successfully"
+    },
+    "error": {
+      "invalid_station": "Invalid station selection"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Station options",
+        "data": {
+          "stale_hours": "Stale data threshold"
+        },
+        "data_description": {
+          "stale_hours": "How long before station data is considered stale and a repair issue is raised."
+        }
+      }
+    },
+    "abort": {
+      "no_options": "Solar data entries have no configurable options"
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Cannot connect to the kc2g station list"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "solar_flux_index":          { "name": "Solar Flux Index" },
+      "solar_sunspots":            { "name": "Solar Sunspots" },
+      "solar_a_index":             { "name": "Solar A-Index" },
+      "solar_k_index":             { "name": "Solar K-Index" },
+      "solar_bz":                  { "name": "Solar Bz (hamqsl)" },
+      "solar_wind":                { "name": "Solar Wind (hamqsl)" },
+      "solar_hf_80_40_day":        { "name": "HF Conditions 80m-40m Day" },
+      "solar_hf_30_20_day":        { "name": "HF Conditions 30m-20m Day" },
+      "solar_hf_17_15_day":        { "name": "HF Conditions 17m-15m Day" },
+      "solar_hf_12_10_day":        { "name": "HF Conditions 12m-10m Day" },
+      "solar_hf_80_40_night":      { "name": "HF Conditions 80m-40m Night" },
+      "solar_hf_30_20_night":      { "name": "HF Conditions 30m-20m Night" },
+      "solar_hf_17_15_night":      { "name": "HF Conditions 17m-15m Night" },
+      "solar_hf_12_10_night":      { "name": "HF Conditions 12m-10m Night" },
+      "solar_geomag_field":        { "name": "HF Conditions Geomag Field" },
+      "solar_sig_noise_lvl":       { "name": "HF Conditions Noise Level" },
+      "solar_fof2":                { "name": "Solar foF2" },
+      "solar_xray":                { "name": "Solar X-Ray Class" },
+      "solar_xray_scale":          { "name": "Solar X-Ray Scale" },
+      "solar_geomag_storm":        { "name": "Geomagnetic Storm Scale" },
+      "solar_radiation_storm":     { "name": "Solar Radiation Storm Scale" },
+      "solar_radio_blackout":      { "name": "Radio Blackout Scale" },
+      "solar_kp_estimated":        { "name": "Estimated Kp (Fractional)" },
+      "solar_flare_prob_m1":       { "name": "M-Class Flare Probability (1-day)" },
+      "solar_flare_prob_x1":       { "name": "X-Class Flare Probability (1-day)" },
+      "solar_flare_prob_m3":       { "name": "M-Class Flare Probability (3-day)" },
+      "solar_flare_prob_x3":       { "name": "X-Class Flare Probability (3-day)" },
+      "solar_pca":                 { "name": "Polar Cap Absorption" },
+      "solar_alert_count":         { "name": "Space Weather Alerts" },
+      "solar_xray_peak_class":     { "name": "Solar X-Ray Peak Class" },
+      "solar_vhf_aurora":          { "name": "VHF Aurora (Northern Hemisphere)" },
+      "solar_vhf_eskip_eu":        { "name": "VHF E-Skip Europe" },
+      "solar_vhf_eskip_na":        { "name": "VHF E-Skip North America" },
+      "solar_vhf_eskip_eu_6m":     { "name": "VHF E-Skip Europe 6m" },
+      "solar_vhf_eskip_eu_4m":     { "name": "VHF E-Skip Europe 4m" },
+      "solar_aurora_activity":     { "name": "Aurora Activity" },
+      "solar_aurora_latitude":     { "name": "Aurora Latitude" },
+      "solar_proton_flux":         { "name": "Solar Proton Flux" },
+      "solar_electron_flux":       { "name": "Solar Electron Flux" },
+      "solar_helium_line":         { "name": "Solar Helium Line" },
+      "solar_k_index_nighttime":   { "name": "Solar K-Index (Nighttime)" },
+      "solar_xray_begin_class":    { "name": "Solar X-Ray Flare Begin Class" },
+      "solar_xray_end_class":      { "name": "Solar X-Ray Flare End Class" },
+      "solar_xray_current_ratio":  { "name": "Solar X-Ray Current Ratio" },
+      "solar_wind_density":        { "name": "Solar Wind Density" },
+      "solar_wind_speed_noaa":     { "name": "Solar Wind Speed (NOAA)" },
+      "solar_bz_noaa":             { "name": "Interplanetary Magnetic Field Bz (NOAA)" },
+      "solar_wind_bt":             { "name": "Interplanetary Magnetic Field Bt" },
+      "solar_kp_forecast":         { "name": "Kp Forecast (Next 3 Hours)" },
+      "solar_dst":                 { "name": "Disturbance Storm Time Index (Dst)" },
+      "solar_a_index_predicted":   { "name": "Predicted A-Index (1-Day)" },
+      "solar_a_index_predicted_2d":{ "name": "Predicted A-Index (2-Day)" },
+      "solar_a_index_predicted_3d":{ "name": "Predicted A-Index (3-Day)" },
+      "solar_flux_predicted":      { "name": "Predicted Solar Flux Index (1-Day)" },
+      "solar_active_regions":      { "name": "Active Solar Regions" },
+      "hf_muf":     { "name": "Solar HF MUF" },
+      "hf_fof2":    { "name": "Solar HF foF2" },
+      "hf_foe":     { "name": "Solar HF foE" },
+      "hf_cs":      { "name": "Solar HF Confidence" },
+      "hf_foes":    { "name": "Solar HF foEs (Sporadic E)" },
+      "hf_hmf2":    { "name": "Solar HF hmF2" },
+      "hf_tec":     { "name": "Solar HF TEC" },
+      "hf_hme":     { "name": "Solar HF hmE" },
+      "hf_md":      { "name": "Solar HF M(3000)F2" },
+      "hf_fof1":    { "name": "Solar HF foF1" },
+      "hf_hmf1":    { "name": "Solar HF hmF1" },
+      "hf_scalef2": { "name": "Solar HF Scale Height F2" },
+      "hf_yf2":     { "name": "Solar HF yF2" }
+    }
+  },
+  "issues": {
+    "stale_noaa": {
+      "title": "NOAA solar data is unavailable",
+      "description": "The integration has been unable to reach NOAA SWPC (services.swpc.noaa.gov) for over an hour. Solar sensors are showing stale data. Check your internet connection or visit [NOAA SWPC status](https://www.swpc.noaa.gov/) for outage information."
+    },
+    "stale_station_data": {
+      "title": "Ionosonde station data is stale",
+      "description": "The ionosonde station **{station_name}** ({station_code}) has not received fresh data. Last update: {last_time}. Consider selecting a different station from the [integration configuration page]({url})."
+    }
+  }
+}
