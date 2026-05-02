@@ -1,0 +1,100 @@
+# Amateur Radio Propagation — Diagnostics / Freshness Dashboard
+#
+# No custom cards required.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - Diagnostics
+views:
+  - title: Diagnostics
+    path: diagnostics
+    icon: mdi:database-clock-outline
+    cards:
+      - type: markdown
+        content: |
+          # Diagnostics / Data Freshness
+          Support view for source update timing, disabled diagnostic entities, and stale station context.
+
+      - type: entities
+        title: Source Freshness
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_xray
+            name: NOAA X-Ray
+            secondary_info: last-updated
+          - entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: hamqsl Solar XML
+            secondary_info: last-updated
+          - entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: kc2g Station
+            secondary_info: last-updated
+
+      - type: grid
+        title: Availability Checks
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_alert_count
+            name: NOAA Alerts
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: hamqsl SFI
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: kc2g MUF
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_cs_if843
+            name: Station Confidence
+
+      - type: entities
+        title: Solar Diagnostics
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Wind Speed (NOAA)
+          - entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Active Regions
+          - entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Forecast
+          - entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+      - type: entities
+        title: MUF Diagnostics
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2
+
+      - type: markdown
+        content: |
+          ## Support Checklist
+          - Open entity More Info to inspect source freshness attributes.
+          - Check Settings → Repairs for stale NOAA or stale station issues.
+          - Enable optional diagnostic entities from entity settings if they are hidden.
+          - NOAA forecast entities are useful for comparing predicted disturbance against actual Kp/Dst changes.
+          - Replace `IF843` / `if843` with the configured station code.
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: IMF Bz
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Flare 3d

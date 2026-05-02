@@ -1,0 +1,126 @@
+# Amateur Radio Propagation — State Switch + Browser Mod Dashboard
+#
+# Requires:
+#   - custom:state-switch
+#   - browser_mod
+#
+# Install State Switch via HACS → Frontend.
+# Install browser_mod via HACS → Integrations.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - Responsive Popup
+views:
+  - title: Responsive
+    path: responsive-popup
+    icon: mdi:responsive
+    cards:
+      - type: custom:state-switch
+        entity: mediaquery
+        default: desktop
+        states:
+          "(max-width: 767px)":
+            type: vertical-stack
+            cards:
+              - type: markdown
+                content: "# Mobile Propagation"
+              - type: grid
+                columns: 2
+                square: false
+                cards:
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_flux_index
+                    name: SFI
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_kp_estimated
+                    name: Kp
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_xray
+                    name: X-Ray
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+                    name: MUF
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_kp_forecast
+                    name: Kp Forecast
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_dst
+                    name: Dst
+              - type: button
+                name: Explain MUF
+                icon: mdi:information-outline
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      title: MUF
+                      content:
+                        type: markdown
+                        content: |
+                          **MUF** is the station-local maximum usable frequency estimate.
+                          It is useful as a nearby sounding cue, not a complete end-to-end path model.
+          desktop:
+            type: vertical-stack
+            cards:
+              - type: markdown
+                content: "# Desktop Propagation Console"
+              - type: grid
+                title: Desktop Summary
+                columns: 4
+                square: false
+                cards:
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_flux_index
+                    name: SFI
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_kp_estimated
+                    name: Kp
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_xray
+                    name: X-Ray
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_alert_count
+                    name: Alerts
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_kp_forecast
+                    name: Kp Forecast
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_dst
+                    name: Dst
+                  - type: tile
+                    entity: sensor.amateur_radio_propagation_solar_active_regions
+                    name: Regions
+              - type: entities
+                title: Details
+                entities:
+                  - sensor.amateur_radio_propagation_solar_hf_80_40_day
+                  - sensor.amateur_radio_propagation_solar_hf_30_20_day
+                  - sensor.amateur_radio_propagation_solar_hf_17_15_day
+                  - sensor.amateur_radio_propagation_solar_hf_12_10_day
+                  - sensor.amateur_radio_propagation_solar_hf_muf_if843
+                  - sensor.amateur_radio_propagation_solar_hf_md_if843
+                  - sensor.amateur_radio_propagation_solar_bz_noaa
+                  - sensor.amateur_radio_propagation_solar_wind_speed_noaa
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Flare 3d

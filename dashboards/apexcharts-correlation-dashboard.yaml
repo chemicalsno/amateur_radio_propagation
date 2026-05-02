@@ -1,0 +1,166 @@
+# Amateur Radio Propagation — ApexCharts Correlation Dashboard
+#
+# Requires:
+#   - custom:apexcharts-card
+#
+# Install ApexCharts Card via HACS → Frontend.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - ApexCharts
+views:
+  - title: Correlation
+    path: apexcharts-correlation
+    icon: mdi:chart-timeline-variant
+    cards:
+      - type: markdown
+        content: |
+          # Propagation Correlation
+          Compare solar inputs against local ionosonde response and geomagnetic disturbance.
+
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: Solar Flux vs Local MUF
+          show_states: true
+        graph_span: 7d
+        span:
+          end: day
+        series:
+          - entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: SFI
+            type: line
+            group_by:
+              duration: 3h
+              func: avg
+          - entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: MUF
+            type: line
+            yaxis_id: muf
+            group_by:
+              duration: 1h
+              func: avg
+        yaxis:
+          - id: sfi
+            decimals: 0
+          - id: muf
+            opposite: true
+            decimals: 1
+
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: Geomagnetic Activity
+          show_states: true
+        graph_span: 72h
+        series:
+          - entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+            type: column
+            group_by:
+              duration: 1h
+              func: avg
+          - entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: Bz
+            type: line
+            yaxis_id: bz
+            group_by:
+              duration: 1h
+              func: avg
+          - entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst
+            type: line
+            yaxis_id: bz
+            group_by:
+              duration: 1h
+              func: avg
+          - entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Forecast
+            type: line
+            group_by:
+              duration: 3h
+              func: avg
+        yaxis:
+          - id: kp
+            min: 0
+            max: 9
+          - id: bz
+            opposite: true
+            decimals: 1
+
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: F Layer
+          show_states: true
+        graph_span: 72h
+        series:
+          - entity: sensor.amateur_radio_propagation_solar_hf_fof2_if843
+            name: foF2
+            type: line
+          - entity: sensor.amateur_radio_propagation_solar_hf_hmf2_if843
+            name: hmF2
+            type: line
+            yaxis_id: height
+          - entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2
+            type: line
+            yaxis_id: factor
+        yaxis:
+          - id: fof2
+            decimals: 1
+          - id: height
+            opposite: true
+            decimals: 0
+          - id: factor
+            opposite: true
+            decimals: 1
+
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: NOAA Forecasts
+          show_states: true
+        graph_span: 7d
+        series:
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+            type: line
+            group_by:
+              duration: 6h
+              func: avg
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A 1d
+            type: column
+            yaxis_id: aindex
+            group_by:
+              duration: 6h
+              func: avg
+        yaxis:
+          - id: sfi
+            decimals: 0
+          - id: aindex
+            opposite: true
+            decimals: 0
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Solar Wind Speed
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+          - entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Active Regions
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Flare 3d

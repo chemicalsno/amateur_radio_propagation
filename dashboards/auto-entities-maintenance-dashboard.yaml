@@ -1,0 +1,109 @@
+# Amateur Radio Propagation — Auto Entities Maintenance Dashboard
+#
+# Requires:
+#   - custom:auto-entities
+#
+# Install Auto Entities via HACS → Frontend.
+
+title: Amateur Radio Propagation - Auto Entities
+views:
+  - title: Maintenance
+    path: auto-entities-maintenance
+    icon: mdi:format-list-checks
+    cards:
+      - type: markdown
+        content: |
+          # Auto Entities Maintenance
+          Automatically lists sensors from this integration by state and naming pattern.
+
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: Unavailable Propagation Sensors
+          show_header_toggle: false
+        filter:
+          include:
+            - domain: sensor
+              integration: amateur_radio_propagation
+              state: unavailable
+        sort:
+          method: name
+
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: MUF Station Sensors
+          show_header_toggle: false
+        filter:
+          include:
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_hf_*"
+        sort:
+          method: entity_id
+
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: NOAA Space Weather Sensors
+          show_header_toggle: false
+        filter:
+          include:
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_xray*"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_flare_prob*"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_*storm*"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_alert_count"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_kp_forecast"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_dst"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_wind*"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_bz_noaa"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_active_regions"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_a_index_predicted*"
+            - domain: sensor
+              integration: amateur_radio_propagation
+              entity_id: "*solar_flux_predicted"
+        sort:
+          method: name
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Solar Wind Speed
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2

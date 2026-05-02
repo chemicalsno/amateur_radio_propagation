@@ -1,0 +1,145 @@
+# Amateur Radio Propagation — Contest / Field Day Dashboard
+#
+# No custom cards required.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - Contest
+views:
+  - title: Contest Desk
+    path: contest
+    icon: mdi:trophy-outline
+    cards:
+      - type: markdown
+        content: |
+          # Contest / Field Day Desk
+          Dense scan view for operating decisions, band changes, and space-weather interruptions.
+
+      - type: grid
+        title: Operating Conditions
+        columns: 4
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: SFI
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_sunspots
+            name: SSN
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_k_index
+            name: K
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_a_index
+            name: A
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: Bz
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Wind
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_xray
+            name: X-Ray
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Forecast
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Regions
+
+      - type: entities
+        title: Band Change Cues
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_hf_80_40_day
+            name: 80m-40m Day
+          - entity: sensor.amateur_radio_propagation_solar_hf_30_20_day
+            name: 30m-20m Day
+          - entity: sensor.amateur_radio_propagation_solar_hf_17_15_day
+            name: 17m-15m Day
+          - entity: sensor.amateur_radio_propagation_solar_hf_12_10_day
+            name: 12m-10m Day
+          - entity: sensor.amateur_radio_propagation_solar_hf_80_40_night
+            name: 80m-40m Night
+          - entity: sensor.amateur_radio_propagation_solar_hf_30_20_night
+            name: 30m-20m Night
+          - entity: sensor.amateur_radio_propagation_solar_hf_17_15_night
+            name: 17m-15m Night
+          - entity: sensor.amateur_radio_propagation_solar_hf_12_10_night
+            name: 12m-10m Night
+
+      - type: grid
+        title: Local Ionosonde
+        columns: 4
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: MUF
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_fof2_if843
+            name: foF2
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_foes_if843
+            name: foEs
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_cs_if843
+            name: Confidence
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2
+
+      - type: grid
+        title: Disruption Risk
+        columns: 4
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_alert_count
+            name: Alerts
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_geomag_storm
+            name: G Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_radio_blackout
+            name: R Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_pca
+            name: PCA
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M 3d
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X 3d
+      - type: markdown
+        content: |
+          ## Operating Notes
+          - Check high bands when SFI and MUF are rising and geomagnetic indicators are quiet.
+          - Watch Bz, Dst, Kp forecast, and NOAA alerts before committing to fragile polar or high-band runs.
+          - Use local MUF and foEs as cues, not as full path predictions.
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI

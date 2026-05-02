@@ -1,0 +1,247 @@
+# Amateur Radio Propagation — Embedded Descriptions Dashboard
+#
+# No custom cards required.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - Embedded Descriptions
+views:
+  - title: Guided Overview
+    path: guided
+    icon: mdi:book-open-page-variant
+    cards:
+      - type: markdown
+        content: |
+          # Guided Dashboard
+          This version keeps the propagation context visible in the layout instead of hiding it behind hover effects.
+
+          Tap rows or tiles for the standard Home Assistant More Info dialog. The ionosonde section is preconfigured for station `IF843`.
+
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## Space Weather Alerts
+              **G / S / R scales** summarize geomagnetic storms, radiation storms, and daylight HF blackout risk.
+              **NOAA Alerts** counts active notices and exposes the latest alert message in More Info.
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_alert_count
+                name: NOAA Alerts
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_geomag_storm
+                name: G Scale
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_radiation_storm
+                name: S Scale
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_radio_blackout
+                name: R Scale
+
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## Solar Activity
+              **SFI** and **sunspots** generally track how supportive the ionosphere is for higher HF bands.
+              **A, K, and Kp** describe geomagnetic disturbance: lower is quieter.
+              **Bz** matters when it turns negative, because that increases coupling into Earth's magnetosphere.
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_flux_index
+                name: SFI
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_sunspots
+                name: Sunspots
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_a_index
+                name: A Index
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_k_index
+                name: K Index
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_kp_estimated
+                name: Kp (Est)
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_bz_noaa
+                name: Bz
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+                name: Solar Wind
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_aurora_activity
+                name: Aurora
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_aurora_latitude
+                name: Aur Latitude
+
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## X-Ray and Forecasts
+              **Current X-ray** and **peak 24h** show recent flare strength.
+              **M/X 1-day and 3-day probabilities** are NOAA forecast guidance, not guarantees.
+              **PCA** highlights proton absorption risk on polar routes.
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_xray
+                name: X-Ray
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_xray_peak_class
+                name: Peak 24h
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_xray_scale
+                name: X-Ray Scale
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_flare_prob_m1
+                name: M Prob 1d
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_flare_prob_x1
+                name: X Prob 1d
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+                name: M Prob 3d
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+                name: X Prob 3d
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_pca
+                name: PCA
+
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## NOAA Forecast and Solar Wind Context
+              **Kp forecast** and **Dst** help judge near-term geomagnetic disturbance.
+              **Predicted SFI** and **A-index** show NOAA's short-term outlook.
+              **Bz** and solar wind speed help judge whether geomagnetic conditions are likely to worsen.
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_kp_forecast
+                name: Kp Forecast
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_dst
+                name: Dst
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_active_regions
+                name: Active Regions
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_flux_predicted
+                name: Predicted SFI
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+                name: A Index 1d
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+                name: A Index 2d
+              - type: tile
+                entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+                name: A Index 3d
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## HF Conditions
+              The day and night band scores are broad operating guidance from the solar data feeds.
+              They are useful for a quick go/no-go view, but they are not path-specific predictions.
+          - type: entities
+            title: Day
+            entities:
+              - entity: sensor.amateur_radio_propagation_solar_hf_80_40_day
+                name: 80m-40m Day
+              - entity: sensor.amateur_radio_propagation_solar_hf_30_20_day
+                name: 30m-20m Day
+              - entity: sensor.amateur_radio_propagation_solar_hf_17_15_day
+                name: 17m-15m Day
+              - entity: sensor.amateur_radio_propagation_solar_hf_12_10_day
+                name: 12m-10m Day
+          - type: entities
+            title: Night
+            entities:
+              - entity: sensor.amateur_radio_propagation_solar_hf_80_40_night
+                name: 80m-40m Night
+              - entity: sensor.amateur_radio_propagation_solar_hf_30_20_night
+                name: 30m-20m Night
+              - entity: sensor.amateur_radio_propagation_solar_hf_17_15_night
+                name: 17m-15m Night
+              - entity: sensor.amateur_radio_propagation_solar_hf_12_10_night
+                name: 12m-10m Night
+          - type: entities
+            title: HF Environment
+            entities:
+              - entity: sensor.amateur_radio_propagation_solar_geomag_field
+                name: Geomag Field
+              - entity: sensor.amateur_radio_propagation_solar_sig_noise_lvl
+                name: Noise Level
+              - entity: sensor.amateur_radio_propagation_solar_fof2
+                name: foF2 Global
+
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## VHF Conditions
+              **Aurora** helps auroral backscatter on 6m and 2m.
+              **E-Skip** sections are regional indicators, especially useful during seasonal Es peaks.
+          - type: entities
+            entities:
+              - entity: sensor.amateur_radio_propagation_solar_vhf_aurora
+                name: VHF Aurora
+              - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na
+                name: 2m E-Skip NA
+              - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu
+                name: 2m E-Skip EU
+              - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
+                name: 6m E-Skip EU
+              - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_4m
+                name: 4m E-Skip EU
+
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## Ionosonde - IF843
+              **MUF** is the station-local highest usable frequency estimate.
+              **foF2** is the F2 critical frequency. **M(3000)F2** is the obliquity factor that converts foF2 to MUF (MUF = M × foF2).
+              **foEs** is the quickest hint that sporadic-E may support 10m or 6m.
+              This is local sounding data, not a complete end-to-end path model.
+          - type: entities
+            entities:
+              - entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+                name: MUF
+              - entity: sensor.amateur_radio_propagation_solar_hf_fof2_if843
+                name: foF2
+              - entity: sensor.amateur_radio_propagation_solar_hf_foe_if843
+                name: foE
+              - entity: sensor.amateur_radio_propagation_solar_hf_foes_if843
+                name: foEs
+              - entity: sensor.amateur_radio_propagation_solar_hf_hmf2_if843
+                name: hmF2
+              - entity: sensor.amateur_radio_propagation_solar_hf_tec_if843
+                name: TEC
+              - entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+                name: M(3000)F2
+              - entity: sensor.amateur_radio_propagation_solar_hf_cs_if843
+                name: Confidence
+
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## Optional Diagnostics
+              These entities are often disabled by default. If they show unavailable, enable them in the entity registry first.
+          - type: entities
+            entities:

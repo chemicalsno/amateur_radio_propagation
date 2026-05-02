@@ -1,0 +1,189 @@
+# Amateur Radio Propagation — Button Card Status Matrix
+#
+# Requires:
+#   - custom:button-card
+#
+# Install Button Card via HACS → Frontend.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+button_card_templates:
+  band_status:
+    show_name: true
+    show_state: true
+    tap_action:
+      action: more-info
+    styles:
+      card:
+        - height: 82px
+        - padding: 8px
+      name:
+        - font-size: 12px
+      state:
+        - font-size: 18px
+        - font-weight: 700
+    state:
+      - value: Good
+        styles:
+          card:
+            - background: var(--success-color)
+            - color: var(--primary-background-color)
+      - value: Fair
+        styles:
+          card:
+            - background: var(--warning-color)
+            - color: var(--primary-background-color)
+      - value: Poor
+        styles:
+          card:
+            - background: var(--error-color)
+            - color: var(--primary-background-color)
+      - value: Band Closed
+        styles:
+          card:
+            - opacity: "0.55"
+
+  risk_status:
+    show_name: true
+    show_state: true
+    tap_action:
+      action: more-info
+    styles:
+      card:
+        - height: 82px
+        - padding: 8px
+      name:
+        - font-size: 12px
+      state:
+        - font-size: 18px
+        - font-weight: 700
+
+title: Amateur Radio Propagation - Status Matrix
+views:
+  - title: Matrix
+    path: status-matrix
+    icon: mdi:grid
+    cards:
+      - type: markdown
+        content: |
+          # Status Matrix
+          Compact color-coded Button Card matrix for fast band and risk scanning.
+
+      - type: grid
+        title: HF Day
+        columns: 4
+        square: false
+        cards:
+          - type: custom:button-card
+            template: band_status
+            entity: sensor.amateur_radio_propagation_solar_hf_80_40_day
+            name: 80/40
+          - type: custom:button-card
+            template: band_status
+            entity: sensor.amateur_radio_propagation_solar_hf_30_20_day
+            name: 30/20
+          - type: custom:button-card
+            template: band_status
+            entity: sensor.amateur_radio_propagation_solar_hf_17_15_day
+            name: 17/15
+          - type: custom:button-card
+            template: band_status
+            entity: sensor.amateur_radio_propagation_solar_hf_12_10_day
+            name: 12/10
+
+      - type: grid
+        title: HF Night
+        columns: 4
+        square: false
+        cards:
+          - type: custom:button-card
+            template: band_status
+            entity: sensor.amateur_radio_propagation_solar_hf_80_40_night
+            name: 80/40
+          - type: custom:button-card
+            template: band_status
+            entity: sensor.amateur_radio_propagation_solar_hf_30_20_night
+            name: 30/20
+          - type: custom:button-card
+            template: band_status
+            entity: sensor.amateur_radio_propagation_solar_hf_17_15_night
+            name: 17/15
+          - type: custom:button-card
+            template: band_status
+            entity: sensor.amateur_radio_propagation_solar_hf_12_10_night
+            name: 12/10
+
+      - type: grid
+        title: Risk and Ionosonde
+        columns: 4
+        square: false
+        cards:
+          - type: custom:button-card
+            template: risk_status
+            entity: sensor.amateur_radio_propagation_solar_geomag_storm
+            name: G
+          - type: custom:button-card
+            template: risk_status
+            entity: sensor.amateur_radio_propagation_solar_radio_blackout
+            name: R
+          - type: custom:button-card
+            template: risk_status
+            entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+          - type: custom:button-card
+            template: risk_status
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: MUF
+
+      - type: grid
+        title: Forecast Matrix
+        columns: 4
+        square: false
+        cards:
+          - type: custom:button-card
+            template: risk_status
+            entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Fcst
+          - type: custom:button-card
+            template: risk_status
+            entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst
+          - type: custom:button-card
+            template: risk_status
+            entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: SFI Fcst
+          - type: custom:button-card
+            template: risk_status
+            entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Regions
+
+      - type: markdown
+        content: |
+          ## Matrix Notes
+          Kp forecast, Dst, Bz, and solar wind speed provide near-term disturbance context. Use MUF and M(3000)F2 from the station dashboards for local ionosphere detail.
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Solar Wind Speed
+          - entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: IMF Bz
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2

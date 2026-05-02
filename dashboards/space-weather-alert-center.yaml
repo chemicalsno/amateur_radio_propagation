@@ -1,0 +1,118 @@
+# Amateur Radio Propagation — Space Weather Alert Center
+#
+# No custom cards required.
+
+title: Amateur Radio Propagation - Alert Center
+views:
+  - title: Alerts
+    path: alerts
+    icon: mdi:alert-outline
+    cards:
+      - type: markdown
+        content: |
+          # Space Weather Alert Center
+          NOAA-focused dashboard for active alerts, G/S/R scales, flare risk, and blackout indicators.
+
+      - type: grid
+        title: Current NOAA Risk
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_alert_count
+            name: Active Alerts
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_xray
+            name: X-Ray Class
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_geomag_storm
+            name: G Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_radiation_storm
+            name: S Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_radio_blackout
+            name: R Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_pca
+            name: PCA
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Active Regions
+
+      - type: grid
+        title: Flare Forecast
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_m1
+            name: M 1-day
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_x1
+            name: X 1-day
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M 3-day
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X 3-day
+
+      - type: entities
+        title: X-Ray Details
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_xray
+            name: Current Class
+          - entity: sensor.amateur_radio_propagation_solar_xray_scale
+            name: Scale
+          - entity: sensor.amateur_radio_propagation_solar_xray_peak_class
+            name: Peak Class
+      - type: grid
+        title: Geomagnetic Indices
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst Index
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Forecast
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: Bz (NOAA)
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Wind Speed
+      - type: entities
+        title: NOAA Outlook
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+
+      - type: markdown
+        content: |
+          ## Latest Alert
+          Open the NOAA Alerts entity for the `latest_alert` attribute when active alerts are present.
+          Negative Dst, rising Kp forecast, southward Bz, and stronger solar wind are the main geomagnetic context signals.
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2

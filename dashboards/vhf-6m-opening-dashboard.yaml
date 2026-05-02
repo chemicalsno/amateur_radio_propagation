@@ -1,0 +1,120 @@
+# Amateur Radio Propagation — VHF / 6m Opening Dashboard
+#
+# No custom cards required.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - VHF 6m
+views:
+  - title: VHF / 6m
+    path: vhf-6m
+    icon: mdi:sine-wave
+    cards:
+      - type: markdown
+        content: |
+          # VHF / 6m Opening Watch
+          Focused view for aurora, E-skip, sporadic-E critical frequency, and geomagnetic triggers.
+
+      - type: grid
+        title: Opening Indicators
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_aurora
+            name: VHF Aurora
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na
+            name: E-Skip NA
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu
+            name: E-Skip EU
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_foes_if843
+            name: Local foEs
+
+      - type: grid
+        title: Aurora Drivers
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_aurora_activity
+            name: Aurora Activity
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_aurora_latitude
+            name: Aurora Latitude
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: Bz
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Forecast
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst
+
+      - type: grid
+        title: Solar Wind and Storm Context
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Solar Wind
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_geomag_storm
+            name: G Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_radio_blackout
+            name: R Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_alert_count
+            name: Alerts
+
+      - type: entities
+        title: Regional E-Skip Detail
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na
+            name: North America
+          - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu
+            name: Europe 2m
+          - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
+            name: Europe 6m
+          - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_4m
+            name: Europe 4m
+          - entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Active Regions
+
+      - type: markdown
+        content: |
+          ## Watch Notes
+          E-skip is seasonal and local. Treat foEs and regional E-skip entities as hints, then confirm with beacons, spots, and actual contacts. Aurora is more likely to matter when Kp rises, Dst falls, Bz is southward, and solar wind is elevated.
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2

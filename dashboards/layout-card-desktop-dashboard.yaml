@@ -1,0 +1,164 @@
+# Amateur Radio Propagation — Layout Card Desktop Dashboard
+#
+# Requires:
+#   - custom:layout-card
+#
+# Install Layout Card via HACS → Frontend.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - Layout Card
+views:
+  - title: Desktop Console
+    path: layout-desktop
+    icon: mdi:monitor-dashboard
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: 360px 1fr 1fr
+      grid-template-areas: |
+        "summary solar alerts"
+        "summary forecast iono"
+        "summary hf iono"
+        "summary vhf iono"
+      mediaquery:
+        "(max-width: 900px)":
+          grid-template-columns: 1fr
+          grid-template-areas: |
+            "summary"
+            "alerts"
+            "solar"
+            "forecast"
+            "hf"
+            "iono"
+            "vhf"
+    cards:
+      - type: vertical-stack
+        view_layout:
+          grid-area: summary
+        cards:
+          - type: markdown
+            content: |
+              # Propagation Console
+              Fixed summary column for desktop wall panels and operating desks.
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_alert_count
+            name: NOAA Alerts
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: Local MUF
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+
+      - type: grid
+        title: Solar
+        columns: 2
+        square: false
+        view_layout:
+          grid-area: solar
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: SFI
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_sunspots
+            name: Sunspots
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: Bz
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Wind
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Active Regions
+
+      - type: entities
+        title: NOAA Forecast
+        view_layout:
+          grid-area: forecast
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Forecast
+          - entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+
+      - type: grid
+        title: Alerts
+        columns: 2
+        square: false
+        view_layout:
+          grid-area: alerts
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_xray
+            name: X-Ray
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_geomag_storm
+            name: G Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_radio_blackout
+            name: R Scale
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_pca
+            name: PCA
+
+      - type: entities
+        title: HF Bands
+        view_layout:
+          grid-area: hf
+        entities:
+          - sensor.amateur_radio_propagation_solar_hf_80_40_day
+          - sensor.amateur_radio_propagation_solar_hf_30_20_day
+          - sensor.amateur_radio_propagation_solar_hf_17_15_day
+          - sensor.amateur_radio_propagation_solar_hf_12_10_day
+          - sensor.amateur_radio_propagation_solar_hf_80_40_night
+          - sensor.amateur_radio_propagation_solar_hf_30_20_night
+          - sensor.amateur_radio_propagation_solar_hf_17_15_night
+          - sensor.amateur_radio_propagation_solar_hf_12_10_night
+
+      - type: entities
+        title: Ionosonde IF843
+        view_layout:
+          grid-area: iono
+        entities:
+          - sensor.amateur_radio_propagation_solar_hf_muf_if843
+          - sensor.amateur_radio_propagation_solar_hf_fof2_if843
+          - sensor.amateur_radio_propagation_solar_hf_foes_if843
+          - sensor.amateur_radio_propagation_solar_hf_cs_if843
+          - sensor.amateur_radio_propagation_solar_hf_tec_if843
+          - sensor.amateur_radio_propagation_solar_hf_hmf2_if843
+          - sensor.amateur_radio_propagation_solar_hf_md_if843
+
+      - type: entities
+        title: VHF
+        view_layout:
+          grid-area: vhf
+        entities:
+          - sensor.amateur_radio_propagation_solar_vhf_aurora
+          - sensor.amateur_radio_propagation_solar_vhf_eskip_na
+          - sensor.amateur_radio_propagation_solar_vhf_eskip_eu
+          - sensor.amateur_radio_propagation_solar_aurora_activity
+          - sensor.amateur_radio_propagation_solar_aurora_latitude
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Flare 3d

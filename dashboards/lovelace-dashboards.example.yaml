@@ -1,0 +1,48 @@
+arp-operator:
+  mode: yaml
+  title: Propagation Go/No-Go
+  icon: mdi:radio-tower
+  show_in_sidebar: true
+  filename: dashboards/operator-go-no-go-dashboard.yaml
+
+arp-space-weather:
+  mode: yaml
+  title: Space Weather
+  icon: mdi:weather-lightning
+  show_in_sidebar: true
+  filename: dashboards/space-weather-alert-center.yaml
+
+arp-muf-station:
+  mode: yaml
+  title: MUF Station
+  icon: mdi:access-point
+  show_in_sidebar: true
+  filename: dashboards/muf-station-dashboard.yaml
+
+arp-vhf-six-meter:
+  mode: yaml
+  title: VHF and 6m Watch
+  icon: mdi:sine-wave
+  show_in_sidebar: true
+  filename: dashboards/vhf-6m-opening-dashboard.yaml
+
+arp-diagnostics:
+  mode: yaml
+  title: Propagation Diagnostics
+  icon: mdi:clipboard-pulse-outline
+  show_in_sidebar: false
+  filename: dashboards/diagnostics-freshness-dashboard.yaml
+
+arp-trends:
+  mode: yaml
+  title: Propagation Trends
+  icon: mdi:chart-line
+  show_in_sidebar: true
+  filename: dashboards/mini-graph-trends-dashboard.yaml
+
+arp-mushroom:
+  mode: yaml
+  title: Propagation Mushroom
+  icon: mdi:view-dashboard-outline
+  show_in_sidebar: true
+  filename: dashboards/mushroom-operator-dashboard.yaml

@@ -1,0 +1,147 @@
+# Amateur Radio Propagation — Operator Go/No-Go Dashboard
+#
+# No custom cards required.
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+title: Amateur Radio Propagation - Go No-Go
+views:
+  - title: Go / No-Go
+    path: go-no-go
+    icon: mdi:radio-handheld
+    cards:
+      - type: markdown
+        content: |
+          # Operator Go / No-Go
+          Fast operating snapshot for deciding whether to get on HF, chase high bands, or watch VHF.
+
+          Replace `IF843` / `if843` with your MUF station code.
+
+      - type: grid
+        title: First Look
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: Solar Flux
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_xray
+            name: X-Ray
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_alert_count
+            name: NOAA Alerts
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Forecast
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst
+
+      - type: markdown
+        content: |
+          ## First Look Notes
+          Use Kp forecast and Dst for short-term storm risk. Negative Bz with stronger solar wind is a warning sign for HF disruption.
+
+      - type: grid
+        title: HF High Bands
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_30_20_day
+            name: 20m / 30m Day
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_17_15_day
+            name: 15m / 17m Day
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_12_10_day
+            name: 10m / 12m Day
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: Local MUF
+
+      - type: grid
+        title: HF Low Bands
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_80_40_day
+            name: 40m / 80m Day
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_80_40_night
+            name: 40m / 80m Night
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_geomag_field
+            name: Geomag Field
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_sig_noise_lvl
+            name: Noise
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: Bz
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Solar Wind
+
+      - type: grid
+        title: VHF Watch
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_aurora
+            name: Aurora
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na
+            name: E-Skip NA
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_aurora_latitude
+            name: Aurora Latitude
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_hf_foes_if843
+            name: Local foEs
+
+      - type: entities
+        title: Source Freshness
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_xray
+            name: NOAA source
+            secondary_info: last-updated
+          - entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: hamqsl source
+            secondary_info: last-updated
+          - entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: kc2g source
+            secondary_info: last-updated
+
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+          - entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Active Regions
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Flare 3d
+          - entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2

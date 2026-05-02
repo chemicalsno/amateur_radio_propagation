@@ -1,0 +1,486 @@
+# Amateur Radio Propagation — Browser Mod Dashboard
+#
+# Requires:
+#   - custom:button-card  (HACS → Frontend)
+#   - browser_mod         (HACS → Integration)
+#
+# Uses MUF station code "IF843" with lowercased entity IDs.
+
+button_card_templates:
+  popup_tile:
+    show_name: true
+    show_state: true
+    show_label: true
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.popup
+        data:
+          title: "[[[ return variables.popup_title; ]]]"
+          content:
+            type: markdown
+            content: "[[[ return variables.popup_text; ]]]"
+    hold_action:
+      action: more-info
+    styles:
+      card:
+        - padding: 10px
+        - height: 112px
+      name:
+        - font-size: 12px
+        - font-weight: 600
+      state:
+        - font-size: 20px
+        - padding-top: 4px
+      label:
+        - font-size: 10px
+        - opacity: "0.7"
+        - white-space: normal
+        - line-height: 1.2
+        - padding-top: 4px
+
+title: Amateur Radio Propagation - Browser Mod
+views:
+  - title: Popup Overview
+    path: popup-overview
+    icon: mdi:tablet-dashboard
+    cards:
+      - type: markdown
+        content: |
+          # Browser Mod Dashboard
+          Tap a tile to open a mobile-friendly explanation popup. Hold for Home Assistant's standard More Info dialog.
+
+          This version is the best fit if you want descriptors that work well on phones and tablets.
+
+      - type: grid
+        title: Space Weather Alerts
+        columns: 2
+        square: false
+        cards:
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_alert_count
+            name: NOAA Alerts
+            label: Active watches, warnings, and alerts.
+            variables:
+              popup_title: NOAA Alerts
+              popup_text: |
+                **NOAA Alerts** counts active space weather alerts. Open More Info if you want the latest alert text from the entity attributes.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_geomag_storm
+            name: G Scale
+            label: NOAA geomagnetic storm scale.
+            variables:
+              popup_title: Geomagnetic Storm Scale
+              popup_text: |
+                **G Scale** summarizes geomagnetic storm severity. Higher values usually mean degraded HF, especially on polar paths, and better chances for auroral VHF propagation.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_radiation_storm
+            name: S Scale
+            label: NOAA radiation storm scale.
+            variables:
+              popup_title: Radiation Storm Scale
+              popup_text: |
+                **S Scale** tracks solar radiation storm intensity. Higher levels increase proton absorption risk on polar HF paths.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_radio_blackout
+            name: R Scale
+            label: HF blackout risk on the sunlit side.
+            variables:
+              popup_title: Radio Blackout Scale
+              popup_text: |
+                **R Scale** reflects flare-driven HF blackout severity on the sunlit side of Earth. M- and X-class events drive this scale upward quickly.
+
+      - type: grid
+        title: Solar Activity
+        columns: 3
+        square: false
+        cards:
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_flux_index
+            name: SFI
+            label: Higher usually helps 20m-10m.
+            variables:
+              popup_title: Solar Flux Index
+              popup_text: |
+                **SFI** is 10.7 cm solar flux. Higher values usually support stronger F-layer ionization and improve the upper HF bands.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_sunspots
+            name: Sunspots
+            label: Daily sunspot count.
+            variables:
+              popup_title: Sunspot Number
+              popup_text: |
+                **Sunspots** correlate strongly with overall solar activity and often move with SFI. High counts usually favor higher-band HF performance.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_a_index
+            name: A Index
+            label: Daily geomagnetic average.
+            variables:
+              popup_title: A Index
+              popup_text: |
+                **A Index** is the daily geomagnetic disturbance average. Lower is quieter; elevated values usually mean a less stable ionosphere.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_k_index
+            name: K Index
+            label: 3-hour geomagnetic scale.
+            variables:
+              popup_title: K Index
+              popup_text: |
+                **K Index** is the familiar 0-9 geomagnetic scale. Values 0-3 are usually quiet, 4 unsettled, and 5 or higher storm level.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_kp_estimated
+            name: Kp (Est)
+            label: Fractional NOAA estimate.
+            variables:
+              popup_title: Estimated Kp
+              popup_text: |
+                **Estimated Kp** is NOAA's more granular near-real-time estimate. It often shows conditions trending before the next integer K index update lands.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_bz_noaa
+            name: Bz
+            label: Negative values raise storm risk.
+            variables:
+              popup_title: IMF Bz
+              popup_text: |
+                **Bz** is the north-south component of the interplanetary magnetic field. Sustained negative values increase coupling into Earth's magnetosphere and often precede stronger disturbance.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_wind_speed_noaa
+            name: Solar Wind
+            label: Solar wind speed at L1.
+            variables:
+              popup_title: Solar Wind Speed
+              popup_text: |
+                **Solar Wind** speed becomes more important when it is elevated and paired with negative Bz. Together they are a strong storm signal.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_aurora_activity
+            name: Aurora
+            label: Higher means more auroral activity.
+            variables:
+              popup_title: Aurora Activity
+              popup_text: |
+                **Aurora Activity** is good for auroral VHF backscatter but usually bad for polar-path HF because absorption increases.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_aurora_latitude
+            name: Aur Latitude
+            label: Lower means aurora pushed south.
+            variables:
+              popup_title: Aurora Latitude
+              popup_text: |
+                **Aurora Latitude** marks how far toward the equator the oval has moved. Lower values usually mean a larger disturbance.
+
+      - type: grid
+        title: X-Ray and Forecasts
+        columns: 3
+        square: false
+        cards:
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_xray
+            name: X-Ray
+            label: Current GOES X-ray class.
+            variables:
+              popup_title: GOES X-Ray
+              popup_text: |
+                **GOES X-Ray** tracks current flare intensity. M and X events can produce noticeable to severe daylight HF blackouts.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_m1
+            name: M Prob 1d
+            label: Daily M-class flare chance.
+            variables:
+              popup_title: M-Class Flare Probability
+              popup_text: |
+                **M Prob 1d** is NOAA's 1-day probability of at least one M-class flare. It is useful as a risk indicator, not a guarantee.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_x1
+            name: X Prob 1d
+            label: Daily X-class flare chance.
+            variables:
+              popup_title: X-Class Flare Probability
+              popup_text: |
+                **X Prob 1d** is the forecast chance of an X-class flare. Even modest percentages matter if you're watching for major daylight HF disruption.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_m3
+            name: M Prob 3d
+            label: 3-day M-class flare outlook.
+            variables:
+              popup_title: M-Class Flare Probability (3-day)
+              popup_text: |
+                **M Prob 3d** is NOAA's 3-day outlook probability for at least one M-class flare. Useful alongside the 1-day value for multi-day operating planning.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_flare_prob_x3
+            name: X Prob 3d
+            label: 3-day X-class flare outlook.
+            variables:
+              popup_title: X-Class Flare Probability (3-day)
+              popup_text: |
+                **X Prob 3d** is the 3-day forecast chance of an X-class flare. Pair with the 1-day value to see if elevated risk is expected to persist.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_pca
+            name: PCA
+            label: Polar absorption risk.
+            variables:
+              popup_title: Polar Cap Absorption
+              popup_text: |
+                **PCA** reflects absorption risk for polar HF routes. This matters most on paths crossing the high latitudes.
+
+      - type: grid
+        title: HF Conditions
+        columns: 2
+        square: false
+        cards:
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_80_40_day
+            name: 80m-40m Day
+            label: Low bands are usually weaker in daylight.
+            variables:
+              popup_title: 80m-40m Day
+              popup_text: |
+                Daytime D-layer absorption usually suppresses the low bands. Expect regional coverage more than long-haul DX.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_30_20_day
+            name: 30m-20m Day
+            label: Reliable daytime DX range.
+            variables:
+              popup_title: 30m-20m Day
+              popup_text: |
+                This is often the most dependable daytime DX window. If higher bands are weak, 20m often still carries.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_17_15_day
+            name: 17m-15m Day
+            label: Good when solar support is decent.
+            variables:
+              popup_title: 17m-15m Day
+              popup_text: |
+                These bands improve quickly as flux rises. They are strong indicators that the ionosphere is supporting higher-frequency HF paths.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_12_10_day
+            name: 12m-10m Day
+            label: Best when flux and MUF are both high.
+            variables:
+              popup_title: 12m-10m Day
+              popup_text: |
+                These are the most solar-cycle-sensitive HF bands in the dashboard. Strong values usually require both elevated flux and sufficient MUF.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_80_40_night
+            name: 80m-40m Night
+            label: Prime low-band operating window.
+            variables:
+              popup_title: 80m-40m Night
+              popup_text: |
+                After dark, D-layer absorption fades and the low bands usually come alive for regional and long-haul work.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_30_20_night
+            name: 30m-20m Night
+            label: Often still useful overnight.
+            variables:
+              popup_title: 30m-20m Night
+              popup_text: |
+                These bands often remain useful around the clock, especially near grayline and on east-west paths.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_17_15_night
+            name: 17m-15m Night
+            label: Usually weaker after dark.
+            variables:
+              popup_title: 17m-15m Night
+              popup_text: |
+                These bands often close at night unless the solar cycle is strong or the path is unusually favorable.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_12_10_night
+            name: 12m-10m Night
+            label: Usually closed except special conditions.
+            variables:
+              popup_title: 12m-10m Night
+              popup_text: |
+                At night these bands are usually closed for F-layer work, though sporadic-E can still create short-notice openings.
+
+      - type: grid
+        title: HF Environment and VHF
+        columns: 2
+        square: false
+        cards:
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_geomag_field
+            name: Geomag Field
+            label: One-word magnetic field summary.
+            variables:
+              popup_title: Geomagnetic Field
+              popup_text: |
+                This is the quick qualitative geomagnetic field summary. It is useful as a fast-read HF stability indicator.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_sig_noise_lvl
+            name: Noise Level
+            label: Estimated noise floor severity.
+            variables:
+              popup_title: Noise Level
+              popup_text: |
+                A higher noise level makes weak signals harder to copy even when propagation is technically open.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_fof2
+            name: foF2 Global
+            label: Global F2 critical frequency.
+            variables:
+              popup_title: Global foF2
+              popup_text: |
+                Global **foF2** is a broad ionospheric indicator from the hamqsl feed. It is useful context, but the IF843 section is more local to your station.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_aurora
+            name: VHF Aurora
+            label: Auroral backscatter potential.
+            variables:
+              popup_title: VHF Aurora
+              popup_text: |
+                Auroral conditions can produce distinctive backscatter QSOs on 6m and 2m during strong geomagnetic events.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na
+            name: 2m E-Skip NA
+            label: Rare North American 144 MHz Es.
+            variables:
+              popup_title: 2m E-Skip North America
+              popup_text: |
+                2m sporadic-E is rare and seasonal. When this rises, it is worth watching for unusual VHF DX openings.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
+            name: 6m E-Skip EU
+            label: Stronger Es indicator over Europe.
+            variables:
+              popup_title: 6m E-Skip Europe
+              popup_text: |
+                6m is the most common high-VHF sporadic-E band and often the first place strong Es shows up.
+
+      - type: grid
+        title: Ionosonde - IF843
+        columns: 2
+        square: false
+        cards:
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_muf_if843
+            name: MUF
+            label: Station-local usable frequency estimate.
+            variables:
+              popup_title: IF843 MUF
+              popup_text: |
+                **MUF** is the local maximum usable frequency estimate derived from the IF843 sounding. It is local context, not a complete end-to-end path forecast.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_fof2_if843
+            name: foF2
+            label: F2 critical frequency overhead.
+            variables:
+              popup_title: IF843 foF2
+              popup_text: |
+                **foF2** is the F2-layer critical frequency over the station. It is one of the key drivers behind MUF.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_foe_if843
+            name: foE
+            label: E-layer critical frequency.
+            variables:
+              popup_title: IF843 foE
+              popup_text: |
+                **foE** represents the regular E layer and is most relevant to shorter HF paths and daytime behavior.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_foes_if843
+            name: foEs
+            label: Sporadic-E hint for 10m and 6m.
+            variables:
+              popup_title: IF843 foEs
+              popup_text: |
+                **foEs** is the sporadic-E critical frequency. When it climbs high enough, it strongly hints that 10m or even 6m Es is possible.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_hmf2_if843
+            name: hmF2
+            label: F2 peak height in km.
+            variables:
+              popup_title: IF843 hmF2
+              popup_text: |
+                **hmF2** is the height of the F2 peak. A higher layer can support longer single-hop distances.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_tec_if843
+            name: TEC
+            label: Total Electron Content.
+            variables:
+              popup_title: IF843 TEC
+              popup_text: |
+                **TEC** is a measure of total ionization above the station. Higher ionization often aligns with stronger HF support.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_md_if843
+            name: M(3000)F2
+            label: Propagation factor, typically 2.5–4.0.
+            variables:
+              popup_title: IF843 M(3000)F2
+              popup_text: |
+                **M(3000)F2** is the obliquity factor used to derive MUF from foF2 at a 3000 km path. MUF = M(3000)F2 × foF2. Typical values range from 2.5 to 4.0.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_hf_cs_if843
+            name: Confidence
+            label: Confidence score for the sounding.
+            variables:
+              popup_title: IF843 Confidence
+              popup_text: |
+                **Confidence** tells you how much trust to put in the ionosonde result. Lower values mean the data should be treated more cautiously.
+
+      - type: entities
+        title: Optional Diagnostics
+        entities:
+      - type: markdown
+        content: |
+          ## Additional Sensor Context
+          NOAA forecast fields add short-term outlook for flux, A-index, Kp, flare risk, active regions, and geomagnetic storm development.
+          Solar wind Bz, Dst, forecasts, and station M(3000)F2 provide deeper context without requiring disabled diagnostic entities.
+
+      - type: entities
+        title: Additional Sensors
+        show_header_toggle: false
+        entities:
+          - entity: sensor.amateur_radio_propagation_solar_kp_forecast
+            name: Kp Forecast
+          - entity: sensor.amateur_radio_propagation_solar_dst
+            name: Dst Index
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted
+            name: A Index 1d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_2d
+            name: A Index 2d
+          - entity: sensor.amateur_radio_propagation_solar_a_index_predicted_3d
+            name: A Index 3d
+          - entity: sensor.amateur_radio_propagation_solar_flux_predicted
+            name: Predicted SFI
+          - entity: sensor.amateur_radio_propagation_solar_active_regions
+            name: Active Regions
