@@ -182,6 +182,17 @@ def test_root_hacs_brand_icon_matches_integration_icon() -> None:
     assert root_icon.read_bytes() == integration_icon.read_bytes()
 
 
+def test_icons_cover_all_sensor_translation_keys() -> None:
+    """Every sensor translation key has an integration icon definition."""
+    icons = _load_json(INTEGRATION / "icons.json")["entity"]["sensor"]
+    sensor_keys = {desc.translation_key or desc.key for desc in SENSOR_TYPES}
+    sensor_keys.update(
+        desc.translation_key or desc.key for desc in _muf_descriptions("IF843")
+    )
+
+    assert sensor_keys <= set(icons)
+
+
 @pytest.mark.parametrize("path", _dashboard_files(), ids=_root_relative_id)
 def test_dashboard_yaml_is_valid(path: Path) -> None:
     """Dashboard example YAML files parse successfully."""

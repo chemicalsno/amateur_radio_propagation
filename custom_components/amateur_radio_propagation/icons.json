@@ -22,6 +22,9 @@
       "solar_wind": {
         "default": "mdi:sun-wireless"
       },
+      "solar_fof2": {
+        "default": "mdi:format-vertical-align-top"
+      },
       "solar_xray": {
         "default": "mdi:flare"
       },
@@ -234,6 +237,36 @@
       },
       "solar_active_regions": {
         "default": "mdi:sun-clock"
+      },
+      "hf_muf": {
+        "default": "mdi:format-wrap-top-bottom"
+      },
+      "hf_fof2": {
+        "default": "mdi:format-vertical-align-top"
+      },
+      "hf_foe": {
+        "default": "mdi:format-wrap-inline"
+      },
+      "hf_foes": {
+        "default": "mdi:waveform"
+      },
+      "hf_fof1": {
+        "default": "mdi:format-vertical-align-top"
+      },
+      "hf_hmf2": {
+        "default": "mdi:altimeter"
+      },
+      "hf_hme": {
+        "default": "mdi:altimeter"
+      },
+      "hf_hmf1": {
+        "default": "mdi:altimeter"
+      },
+      "hf_scalef2": {
+        "default": "mdi:ruler"
+      },
+      "hf_yf2": {
+        "default": "mdi:ruler"
       },
       "hf_cs": {
         "default": "mdi:percent-box-outline"

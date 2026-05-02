@@ -6,11 +6,13 @@ No unreleased changes.
 
 ## [2.1.0] - 2026-05-02
 
-### Added
+### Highlights
 
-- State translations for HF band conditions (Good, Fair, Poor, Band Closed) and G/S/R storm scales (G0–G5, S0–S5, R0–R5) so state-based icons resolve correctly.
-- Signal-bar icons for HF band conditions; full bars for Good, partial for Fair, low for Poor.
-- CI workflow (lint, type check, tests) and semantic PR title validation.
+- State-based icons and state translations for HF band conditions and NOAA G/S/R storm scales.
+- Semantic pull request title validation.
+- Updated default HF condition icons from generic wave icons to signal-bar icons.
+- Kept explicit default icons for ionosonde and foF2 sensors while adding dynamic state icon mappings.
+- Bumped integration version to 2.1.0.
 
 ## [2.0.0] - 2026-05-02
 
