@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8
+      - run: uv venv
+      - run: uv pip install -r requirements_test.txt
+      - run: uv run ruff format --check custom_components tests scripts
+      - run: uv run ruff check custom_components tests scripts
+
+  typecheck:
+    name: Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8
+      - run: uv venv
+      - run: uv pip install -r requirements_test.txt
+      - run: uv run mypy custom_components/amateur_radio_propagation tests
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8
+      - run: uv venv
+      - run: uv pip install -r requirements_test.txt
+      - run: uv run pytest --asyncio-mode=auto tests/

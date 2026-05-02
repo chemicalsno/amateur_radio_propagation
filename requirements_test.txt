@@ -1,0 +1,4 @@
+pytest-homeassistant-custom-component
+mypy
+ruff
+defusedxml

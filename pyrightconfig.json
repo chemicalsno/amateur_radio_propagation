@@ -1,0 +1,21 @@
+{
+  "include": [
+    "custom_components/amateur_radio_propagation",
+    "tests"
+  ],
+  "typeCheckingMode": "strict",
+  "pythonVersion": "3.12",
+  "reportMissingImports": false,
+  "reportMissingModuleSource": false,
+  "reportMissingTypeStubs": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownMemberType": false,
+  "reportUnknownParameterType": false,
+  "reportUnknownArgumentType": false,
+  "reportMissingParameterType": false,
+  "reportPrivateUsage": false,
+  "reportUntypedFunctionDecorator": false,
+  "reportUnnecessaryCast": false,
+  "reportIncompatibleMethodOverride": false,
+  "reportIncompatibleVariableOverride": false
+}
