@@ -93,6 +93,8 @@ To install one manually:
 
 You can also copy dashboard YAML files into `/config/dashboards/` and register them in `configuration.yaml`:
 
+This uses Home Assistant's `lovelace.dashboards` configuration.
+
 ```yaml
 lovelace:
   mode: storage

@@ -15,6 +15,7 @@ _DASHBOARDS_DIR = pathlib.Path(__file__).parent / "dashboards"
 _CURATED_TEMPLATES: tuple[tuple[str, str, str], ...] = (
     ("MUF Station", "muf-station-dashboard.yaml", "None"),
     ("Vanilla", "vanilla-dashboard.yaml", "None"),
+    ("Embedded Descriptions", "embedded-descriptions-dashboard.yaml", "None"),
     (
         "Bubble Card",
         "bubble-card-dashboard.yaml",
