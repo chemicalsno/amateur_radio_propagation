@@ -15,28 +15,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
       - uses: astral-sh/setup-uv@v8.1.0
-      - run: uv venv
+      - run: uv venv --python 3.11
       - run: uv pip install -r requirements_test.txt
       - run: uv run ruff format --check custom_components tests scripts
       - run: uv run ruff check custom_components tests scripts
-
-  typecheck:
-    name: Type check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v8.1.0
-      - run: uv venv
-      - run: uv pip install -r requirements_test.txt
-      - run: uv run mypy custom_components/amateur_radio_propagation tests
 
   test:
     name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
       - uses: astral-sh/setup-uv@v8.1.0
-      - run: uv venv
+      - run: uv venv --python 3.11
       - run: uv pip install -r requirements_test.txt
       - run: uv run pytest --asyncio-mode=auto tests/

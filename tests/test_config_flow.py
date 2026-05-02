@@ -51,10 +51,16 @@ async def test_solar_entry_created(hass):
     assert result["type"] == FlowResultType.FORM
     assert result["step_id"] == "user"
 
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        user_input={CHOICE: Choice.SOLAR},
-    )
+    with patch(
+        "custom_components.amateur_radio_propagation.coordinator_solar."
+        "SolarCoordinator._async_update_data",
+        return_value={"solar_xray": "C1.0", "solar_xray_scale": 100.0},
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CHOICE: Choice.SOLAR},
+        )
+        await hass.async_block_till_done()
 
     assert result["type"] == FlowResultType.CREATE_ENTRY
     assert result["data"][CHOICE] == Choice.SOLAR
