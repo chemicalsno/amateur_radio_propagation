@@ -1,0 +1,13 @@
+alias: "10m Band Open Alert"
+description: ""
+triggers:
+  - trigger: state
+    entity_id: sensor.amateur_radio_propagation_solar_hf_12_10_day
+    to: "good"
+conditions: []
+actions:
+  - data:
+      message: "10m is open! HF conditions are Good."
+      title: "📡 10m Band Open"
+    action: notify.mobile_app_iphone
+mode: single
