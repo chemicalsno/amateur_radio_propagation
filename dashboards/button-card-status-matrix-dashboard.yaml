@@ -22,22 +22,22 @@ button_card_templates:
         - font-size: 18px
         - font-weight: 700
     state:
-      - value: Good
+      - value: good
         styles:
           card:
             - background: var(--success-color)
             - color: var(--primary-background-color)
-      - value: Fair
+      - value: fair
         styles:
           card:
             - background: var(--warning-color)
             - color: var(--primary-background-color)
-      - value: Poor
+      - value: poor
         styles:
           card:
             - background: var(--error-color)
             - color: var(--primary-background-color)
-      - value: Band Closed
+      - value: band_closed
         styles:
           card:
             - opacity: "0.55"

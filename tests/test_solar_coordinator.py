@@ -131,14 +131,14 @@ async def test_happy_path_hamqsl_scalars(hass):
 
 
 async def test_happy_path_hamqsl_bands(hass):
-    """hamqsl band conditions parsed correctly."""
+    """hamqsl band conditions are normalized for state translations/icons."""
     coordinator = SolarCoordinator(hass, _make_entry(hass))
     with patch.object(coordinator, "_fetch_text", side_effect=_mock_fetch_text):
         data = await coordinator._async_update_data()
 
-    assert data["solar_hf_80_40_day"] == "Good"
-    assert data["solar_hf_80_40_night"] == "Poor"
-    assert data["solar_hf_30_20_day"] == "Fair"
+    assert data["solar_hf_80_40_day"] == "good"
+    assert data["solar_hf_80_40_night"] == "poor"
+    assert data["solar_hf_30_20_day"] == "fair"
     assert data["solar_vhf_aurora"] == "No"
     assert data["solar_vhf_eskip_eu"] == "No"
 
@@ -257,11 +257,28 @@ def test_parse_noaa_scales_rejects_wrong_shape() -> None:
         _parse_noaa_scales([])
 
 
+def test_parse_noaa_scales_normalizes_states_for_icon_translations() -> None:
+    """NOAA scales parser emits states matching icons.json state keys."""
+    parsed = _parse_noaa_scales(
+        {
+            "0": {
+                "G": {"Scale": "G1"},
+                "S": {"Scale": "S0"},
+                "R": {"Scale": 2},
+            }
+        }
+    )
+
+    assert parsed["solar_geomag_storm"] == "g1"
+    assert parsed["solar_radiation_storm"] == "s0"
+    assert parsed["solar_radio_blackout"] == "r2"
+
+
 def test_parse_noaa_scales_allows_missing_individual_scales() -> None:
     """NOAA scales parser keeps keys present even when a scale block is absent."""
     parsed = _parse_noaa_scales({"0": {"G": {"Scale": "G1"}}})
 
-    assert parsed["solar_geomag_storm"] == "G1"
+    assert parsed["solar_geomag_storm"] == "g1"
     assert parsed["solar_radiation_storm"] is None
     assert parsed["solar_radio_blackout"] is None
 
@@ -299,6 +316,29 @@ def test_parse_hamqsl_rejects_missing_solardata() -> None:
     """hamqsl parser rejects XML missing the solardata element."""
     with pytest.raises(UpdateFailed, match="solardata"):
         _parse_hamqsl("<solar />")
+
+
+def test_parse_hamqsl_normalizes_band_states_for_icon_translations() -> None:
+    """hamqsl parser emits band states matching icons.json state keys."""
+    parsed = _parse_hamqsl(
+        """
+        <solar>
+          <solardata>
+            <calculatedconditions>
+              <band name="80m-40m" time="day">Good</band>
+              <band name="80m-40m" time="night">Poor</band>
+              <band name="30m-20m" time="day">Fair</band>
+              <band name="12m-10m" time="night">Band Closed</band>
+            </calculatedconditions>
+          </solardata>
+        </solar>
+        """
+    )
+
+    assert parsed["solar_hf_80_40_day"] == "good"
+    assert parsed["solar_hf_80_40_night"] == "poor"
+    assert parsed["solar_hf_30_20_day"] == "fair"
+    assert parsed["solar_hf_12_10_night"] == "band_closed"
 
 
 def test_parse_hamqsl_numeric_no_report_becomes_none() -> None:
@@ -410,9 +450,9 @@ async def test_noaa_scales_parsed(hass):
     with patch.object(coordinator, "_fetch_text", side_effect=_full_fetch):
         data = await coordinator._async_update_data()
 
-    assert data["solar_geomag_storm"] == "G2"
-    assert data["solar_radiation_storm"] == "S1"
-    assert data["solar_radio_blackout"] == "R0"
+    assert data["solar_geomag_storm"] == "g2"
+    assert data["solar_radiation_storm"] == "s1"
+    assert data["solar_radio_blackout"] == "r0"
 
 
 async def test_noaa_probabilities_parsed(hass):

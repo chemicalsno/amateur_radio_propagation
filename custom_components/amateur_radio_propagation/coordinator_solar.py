@@ -164,6 +164,19 @@ def _parse_noaa_xray(entries: Any) -> dict[str, Any]:
     return parsed
 
 
+def _normalize_noaa_scale(value: Any, prefix: str) -> str | None:
+    """Normalize NOAA scale values to the icon/translation state keys."""
+    if value is None:
+        return None
+
+    text = str(value).strip().lower()
+    if not text:
+        return None
+    if text.startswith(prefix):
+        return text
+    return f"{prefix}{text}"
+
+
 def _parse_noaa_scales(payload: Any) -> dict[str, Any]:
     """Parse the NOAA space weather scales payload into coordinator data keys."""
     if not isinstance(payload, dict):
@@ -179,9 +192,8 @@ def _parse_noaa_scales(payload: Any) -> dict[str, Any]:
         ("R", "solar_radio_blackout"),
     ):
         source_value = current.get(source_key)
-        parsed[data_key] = (
-            source_value.get("Scale") if isinstance(source_value, dict) else None
-        )
+        scale = source_value.get("Scale") if isinstance(source_value, dict) else None
+        parsed[data_key] = _normalize_noaa_scale(scale, source_key.lower())
     return parsed
 
 
@@ -337,6 +349,11 @@ def _parse_noaa_solar_regions(entries: Any) -> dict[str, Any]:
     return {"solar_active_regions": count}
 
 
+def _normalize_hamqsl_condition(value: str) -> str:
+    """Normalize HAMQSL condition text to icon/translation state keys."""
+    return value.strip().lower().replace(" ", "_")
+
+
 def _parse_hamqsl(body: str) -> dict[str, Any]:
     """Parse hamqsl XML into coordinator data keys."""
     root = ET.fromstring(body)
@@ -364,7 +381,7 @@ def _parse_hamqsl(body: str) -> dict[str, Any]:
             band_data_key = _HAMQSL_BAND_KEYS.get(key)
             value = _text(band)
             if band_data_key and value is not None:
-                parsed[band_data_key] = value
+                parsed[band_data_key] = _normalize_hamqsl_condition(value)
 
     vhf = solardata.find("calculatedvhfconditions")
     if vhf is not None:
