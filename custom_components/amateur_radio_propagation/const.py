@@ -6,11 +6,8 @@ from datetime import timedelta
 from enum import StrEnum
 from typing import Final
 
-from homeassistant.components.sensor import (
-    SensorDeviceClass,
-    SensorEntityDescription,
-    SensorStateClass,
-)
+from homeassistant.components.sensor import SensorEntityDescription
+from homeassistant.components.sensor.const import SensorDeviceClass, SensorStateClass
 from homeassistant.const import EntityCategory, Platform
 
 # ---------------------------------------------------------------------------

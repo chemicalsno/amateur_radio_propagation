@@ -16,7 +16,6 @@ import voluptuous as vol
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
-    FlowResult as ConfigFlowResult,
     OptionsFlow,
 )
 from homeassistant.core import HomeAssistant, callback
@@ -40,6 +39,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 _STATION_LABEL_RE = re.compile(r"^(.+?)\s+\[([^\[\]]+)\]$")
+ConfigFlowResult = Any
 
 
 class CannotConnect(HomeAssistantError):  # type: ignore[misc]
@@ -184,7 +184,11 @@ class HamRadioConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg,mi
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Allow a MUF entry to change its station."""
-        entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
+        entry_id = self.context.get("entry_id")
+        if entry_id is None:
+            return self.async_abort(reason="reconfigure_not_supported")
+
+        entry = self.hass.config_entries.async_get_entry(entry_id)
         if entry is None or entry.data.get(CHOICE) != Choice.MUF:
             return self.async_abort(reason="reconfigure_not_supported")
 
