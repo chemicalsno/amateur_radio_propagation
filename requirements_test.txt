@@ -1,4 +1,4 @@
 pytest-homeassistant-custom-component
-mypy
+pyright
 ruff
 defusedxml

@@ -1,3 +1,14 @@
+[project]
+name = "amateur-radio-propagation-tests"
+version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = [
+    "pytest-homeassistant-custom-component",
+    "pyright",
+    "ruff",
+    "defusedxml",
+]
+
 [tool.ruff]
 target-version = "py312"
 line-length = 88
