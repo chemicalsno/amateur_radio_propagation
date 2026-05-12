@@ -4,6 +4,24 @@
 
 No unreleased changes.
 
+## [2.2.0] - 2026-05-11
+
+### Fixed
+
+- Normalized HF band condition state values to lowercase with underscores (`good`, `fair`, `poor`, `band_closed`) so state-based icons and translations introduced in 2.1.0 now work correctly.
+- Normalized NOAA G/S/R scale state values to lowercase (`g0`–`g5`, `s0`–`s5`, `r0`–`r5`) for the same reason.
+- Made config flow reconfigure handling safer when an entry ID is unavailable.
+
+### Changed
+
+- Improved CI: added pyright type-checking, Python 3.12 matrix, uv lockfile, dependency caching, and reusable python-checks workflow.
+- Updated Home Assistant imports for newer type-checking compatibility.
+
+### Breaking
+
+- HF band condition sensor states are now lowercase (`good` not `Good`, `band_closed` not `Band Closed`). Update any automations or dashboard templates that compare against the old values.
+- NOAA scale sensor states are now lowercase (`g1` not `G1`, `s1` not `S1`, `r0` not `R0`). Update automations accordingly.
+
 ## [2.1.0] - 2026-05-02
 
 ### Highlights
