@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from unittest.mock import patch
+from types import SimpleNamespace
 
 from homeassistant.components.diagnostics import REDACTED
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -28,13 +28,15 @@ async def test_solar_diagnostics(hass):
     )
     entry.add_to_hass(hass)
 
-    with patch(
-        "custom_components.amateur_radio_propagation.coordinator_solar."
-        "SolarCoordinator._async_update_data",
-        return_value={"solar_xray": "C1.0", "solar_xray_scale": 100.0},
-    ):
-        assert await hass.config_entries.async_setup(entry.entry_id) is True
-        await hass.async_block_till_done()
+    setattr(
+        entry,
+        "runtime_data",
+        SimpleNamespace(
+            data={"solar_xray": "C1.0", "solar_xray_scale": 100.0},
+            last_update_success=True,
+            last_exception=None,
+        ),
+    )
 
     result = await async_get_config_entry_diagnostics(hass, entry)
 
@@ -54,13 +56,15 @@ async def test_muf_diagnostics(hass):
     )
     entry.add_to_hass(hass)
 
-    with patch(
-        "custom_components.amateur_radio_propagation.coordinator_muf."
-        "MufCoordinator._async_update_data",
-        return_value={"solar_hf_muf_BC840": 12.5},
-    ):
-        assert await hass.config_entries.async_setup(entry.entry_id) is True
-        await hass.async_block_till_done()
+    setattr(
+        entry,
+        "runtime_data",
+        SimpleNamespace(
+            data={"solar_hf_muf_BC840": 12.5},
+            last_update_success=True,
+            last_exception=None,
+        ),
+    )
 
     result = await async_get_config_entry_diagnostics(hass, entry)
 

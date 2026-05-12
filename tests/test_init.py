@@ -34,7 +34,7 @@ async def test_solar_setup_and_unload(hass):
         await hass.async_block_till_done()
 
     assert entry.state is ConfigEntryState.LOADED
-    assert entry.runtime_data is not None
+    assert getattr(entry, "runtime_data", None) is not None
 
     assert await hass.config_entries.async_unload(entry.entry_id) is True
     await hass.async_block_till_done()
@@ -102,6 +102,8 @@ async def test_muf_setup_calls_dashboard_notification(hass):
         await hass.async_block_till_done()
 
     mock_notify.assert_awaited_once_with(hass, entry)
+    assert await hass.config_entries.async_unload(entry.entry_id) is True
+    await hass.async_block_till_done()
 
 
 async def test_solar_setup_does_not_call_dashboard_notification(hass):
@@ -128,6 +130,8 @@ async def test_solar_setup_does_not_call_dashboard_notification(hass):
         await hass.async_block_till_done()
 
     mock_notify.assert_not_called()
+    assert await hass.config_entries.async_unload(entry.entry_id) is True
+    await hass.async_block_till_done()
 
 
 async def test_setup_retry_on_first_fetch_failure(hass):

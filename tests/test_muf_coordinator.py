@@ -29,6 +29,7 @@ from homeassistant.helpers.update_coordinator import UpdateFailed
 
 STATION_CODE_VAL = "BC840"
 
+
 # Fresh record: timestamp is now
 _FRESH_TIME = dt_util.utcnow().isoformat()
 # Stale record: timestamp is 4 hours ago

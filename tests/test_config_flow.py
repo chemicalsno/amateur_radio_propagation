@@ -52,9 +52,8 @@ async def test_solar_entry_created(hass):
     assert result["step_id"] == "user"
 
     with patch(
-        "custom_components.amateur_radio_propagation.coordinator_solar."
-        "SolarCoordinator._async_update_data",
-        return_value={"solar_xray": "C1.0", "solar_xray_scale": 100.0},
+        "custom_components.amateur_radio_propagation.async_setup_entry",
+        return_value=True,
     ):
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -95,9 +94,16 @@ async def test_muf_entry_created(hass):
 
     # Submitting MUF choice immediately calls async_step_station which fetches
     # the station list — the mock must be active for that configure call.
-    with patch(
-        "custom_components.amateur_radio_propagation.config_flow.async_station_list_kc2g",
-        return_value=STATION_LIST,
+    with (
+        patch(
+            "custom_components.amateur_radio_propagation.config_flow."
+            "async_station_list_kc2g",
+            return_value=STATION_LIST,
+        ),
+        patch(
+            "custom_components.amateur_radio_propagation.async_setup_entry",
+            return_value=True,
+        ),
     ):
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -109,6 +115,7 @@ async def test_muf_entry_created(hass):
             result["flow_id"],
             user_input={USER_STATION_CODE: "Boulder [BC840]"},
         )
+        await hass.async_block_till_done()
 
     assert result["type"] == FlowResultType.CREATE_ENTRY
     assert result["data"][CHOICE] == Choice.MUF
@@ -194,9 +201,12 @@ async def test_muf_reconfigure_changes_station(hass):
             return_value=STATION_LIST,
         ),
         patch(
-            "custom_components.amateur_radio_propagation.coordinator_muf."
-            "MufCoordinator._async_update_data",
-            return_value={"solar_hf_muf_PQ052": 14.0},
+            "custom_components.amateur_radio_propagation.async_setup_entry",
+            return_value=True,
+        ),
+        patch(
+            "custom_components.amateur_radio_propagation.async_unload_entry",
+            return_value=True,
         ),
     ):
         result = await hass.config_entries.flow.async_init(
@@ -209,6 +219,7 @@ async def test_muf_reconfigure_changes_station(hass):
             result["flow_id"],
             user_input={USER_STATION_CODE: "Pruhonice [PQ052]"},
         )
+        await hass.async_block_till_done()
 
     assert result["type"] == FlowResultType.ABORT
     assert result["reason"] == "reconfigure_successful"
