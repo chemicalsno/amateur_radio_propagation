@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-No unreleased changes.
+### Added
+
+- Dashboard screenshots. `docs/DASHBOARDS.md` now has a Screenshots gallery of the example dashboards, and the README links to it with a hero image (resolves issue #3).
 
 ## [2.2.0] - 2026-05-11
 

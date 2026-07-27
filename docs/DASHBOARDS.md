@@ -26,6 +26,68 @@ Example Lovelace dashboards live in `dashboards/`. They are optional starting po
 | `amateur-radio-propagation.yaml` | `custom:button-card` | Desktop dashboard with hover tooltips. |
 | `browser-mod-dashboard.yaml` | `custom:button-card`, `browser_mod` | Desktop dashboard with tap-to-open popups. |
 
+## Screenshots
+
+Captured against live data. Entity values (Solar Flux, MUF, band conditions, and so on) will differ on your station.
+
+### `vanilla-dashboard.yaml`
+
+Built only with standard Lovelace cards, so it works on any Home Assistant install.
+
+![Vanilla dashboard](images/dashboards/01-vanilla.png)
+
+### `embedded-descriptions-dashboard.yaml`
+
+Keeps an inline explanation next to each group instead of hiding it behind a tap or hover.
+
+![Embedded descriptions dashboard](images/dashboards/07-embedded-descriptions.png)
+
+### `operator-go-no-go-dashboard.yaml`
+
+A fast operating snapshot for deciding whether to get on HF, chase the high bands, or watch VHF.
+
+![Operator Go/No-Go dashboard](images/dashboards/10-go-no-go.png)
+
+### `muf-station-dashboard.yaml`
+
+A station-centered view of local MUF, critical frequencies, layer height, and data freshness.
+
+![MUF station dashboard](images/dashboards/08-muf-station.png)
+
+### `mushroom-operator-dashboard.yaml`
+
+A clean operator console built with Mushroom cards. Requires Mushroom (HACS → Frontend).
+
+![Mushroom operator dashboard](images/dashboards/02-mushroom-operator.png)
+
+### `bubble-card-dashboard.yaml`
+
+Sectioned mobile/desktop layout with tap-to-open descriptions. Requires `custom:bubble-card`.
+
+![Bubble Card dashboard](images/dashboards/03-bubble-card.png)
+
+### `mini-graph-trends-dashboard.yaml`
+
+Trend-focused solar and MUF history. Requires `custom:mini-graph-card` and recorder history.
+
+![mini-graph trends dashboard](images/dashboards/04-mini-graph-trends.png)
+
+### `amateur-radio-propagation.yaml`
+
+A desktop dashboard with hover tooltips, built with `custom:button-card`.
+
+![Amateur radio propagation dashboard](images/dashboards/09-band-conditions.png)
+
+### `browser-mod-dashboard.yaml`
+
+A desktop dashboard where tapping any tile opens a mobile-friendly explanation popup. Requires `custom:button-card` and `browser_mod`.
+
+![Browser Mod dashboard](images/dashboards/05-browser-mod.png)
+
+Tapping a tile opens its popup:
+
+![Browser Mod popup](images/dashboards/06-browser-mod-popup.png)
+
 ## Manual Import
 
 1. In Home Assistant, go to **Settings -> Dashboards -> Add Dashboard**.
