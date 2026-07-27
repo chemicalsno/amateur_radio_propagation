@@ -371,6 +371,15 @@ views:
                 2m sporadic-E is rare and seasonal. When this rises, it is worth watching for unusual VHF DX openings.
           - type: custom:button-card
             template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu
+            name: 2m E-Skip EU
+            label: European 144 MHz Es indicator.
+            variables:
+              popup_title: 2m E-Skip Europe
+              popup_text: |
+                2m sporadic-E over Europe is uncommon but useful for spotting rare VHF DX openings.
+          - type: custom:button-card
+            template: popup_tile
             entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
             name: 6m E-Skip EU
             label: Stronger Es indicator over Europe.
@@ -378,6 +387,15 @@ views:
               popup_title: 6m E-Skip Europe
               popup_text: |
                 6m is the most common high-VHF sporadic-E band and often the first place strong Es shows up.
+          - type: custom:button-card
+            template: popup_tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_4m
+            name: 4m E-Skip EU
+            label: European 70 MHz Es indicator.
+            variables:
+              popup_title: 4m E-Skip Europe
+              popup_text: |
+                4m/70 MHz sporadic-E is a mid-point between common 6m openings and rarer 2m openings.
 
       - type: grid
         title: Ionosonde - IF843

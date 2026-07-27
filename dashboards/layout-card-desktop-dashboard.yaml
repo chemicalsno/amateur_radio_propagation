@@ -145,6 +145,8 @@ views:
           - sensor.amateur_radio_propagation_solar_vhf_aurora
           - sensor.amateur_radio_propagation_solar_vhf_eskip_na
           - sensor.amateur_radio_propagation_solar_vhf_eskip_eu
+          - sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
+          - sensor.amateur_radio_propagation_solar_vhf_eskip_eu_4m
           - sensor.amateur_radio_propagation_solar_aurora_activity
           - sensor.amateur_radio_propagation_solar_aurora_latitude
 
