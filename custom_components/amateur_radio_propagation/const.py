@@ -58,11 +58,10 @@ URL_NOAA_PROBABILITIES: Final = (
 )
 URL_NOAA_KP_1M: Final = "https://services.swpc.noaa.gov/json/planetary_k_index_1m.json"
 URL_NOAA_ALERTS: Final = "https://services.swpc.noaa.gov/products/alerts.json"
-URL_NOAA_PLASMA: Final = (
-    "https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json"
-)
-URL_NOAA_MAG: Final = (
-    "https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json"
+# NOAA retired products/solar-wind/{plasma,mag}-2-hour.json (now 404). The
+# propagated-solar-wind feed carries speed, density, Bz and Bt in one payload.
+URL_NOAA_SOLAR_WIND: Final = (
+    "https://services.swpc.noaa.gov/products/geospace/propagated-solar-wind-1-hour.json"
 )
 URL_NOAA_KP_FORECAST: Final = (
     "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json"
