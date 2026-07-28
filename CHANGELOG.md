@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Dashboard screenshots. `docs/DASHBOARDS.md` now has a Screenshots gallery of the example dashboards, and the README links to it with a hero image (resolves issue #3).
+
 ### Fixed
 
 - Restored the Solar Wind Speed (NOAA), IMF Bz (NOAA), Solar Wind Density, and Bt sensors. NOAA retired the `products/solar-wind/plasma-2-hour.json` and `mag-2-hour.json` endpoints (now HTTP 404), leaving these sensors permanently unavailable. They are now sourced from the `propagated-solar-wind-1-hour.json` feed, which carries speed, density, Bz, and Bt in a single payload.
