@@ -99,6 +99,18 @@ views:
             entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na
             name: E-Skip NA
           - type: tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu
+            name: 2m E-Skip EU
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
+            name: 6m E-Skip EU
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_4m
+            name: 4m E-Skip EU
+          - type: tile
+            entity: sensor.amateur_radio_propagation_solar_aurora_activity
+            name: Aurora Activity
+          - type: tile
             entity: sensor.amateur_radio_propagation_solar_aurora_latitude
             name: Aurora Latitude
           - type: tile
