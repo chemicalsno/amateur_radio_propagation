@@ -13,6 +13,7 @@
 ### Fixed
 
 - Restored the Solar Wind Speed (NOAA), IMF Bz (NOAA), Solar Wind Density, and Bt sensors. NOAA retired the `products/solar-wind/plasma-2-hour.json` and `mag-2-hour.json` endpoints (now HTTP 404), leaving these sensors permanently unavailable. They are now sourced from the `propagated-solar-wind-1-hour.json` feed, which carries speed, density, Bz, and Bt in a single payload.
+- Re-synced the bundled `mushroom-operator` dashboard (served by the MUF setup notification) with its root example after the VHF/aurora sensor update, so HACS installs receive the same dashboard shown in the docs. Added `scripts/sync_dashboards.py` (`--check` mode) to keep the bundled curated dashboards in sync with `dashboards/`.
 
 ## [2.2.0] - 2026-05-11
 
