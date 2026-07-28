@@ -24,8 +24,7 @@ from custom_components.amateur_radio_propagation.coordinator_solar import (
     _parse_noaa_probabilities,
     _parse_noaa_scales,
     _parse_noaa_xray,
-    _parse_noaa_plasma,  # new
-    _parse_noaa_mag,  # new
+    _parse_noaa_solar_wind,
     _parse_noaa_kp_forecast,
     _parse_noaa_dst,
     _parse_noaa_predicted_a,
@@ -758,125 +757,115 @@ async def test_repair_issue_uses_started_at_when_no_success(hass):
 
 
 # ---------------------------------------------------------------------------
-# Solar wind plasma / mag parse tests
+# Solar wind (propagated) parse tests
 # ---------------------------------------------------------------------------
 
+# Row schema: time_tag, speed, density, temperature, bx, by, bz, bt, vx, vy, vz
+_SW_HEADER = [
+    "time_tag",
+    "speed",
+    "density",
+    "temperature",
+    "bx",
+    "by",
+    "bz",
+    "bt",
+    "vx",
+    "vy",
+    "vz",
+    "propagated_time_tag",
+]
 
-def test_parse_noaa_plasma_returns_density_and_speed():
-    """Plasma parse extracts density and speed from last data row."""
+
+def test_parse_noaa_solar_wind_returns_speed_density_bz_bt():
+    """Solar wind parse extracts speed, density, Bz and Bt from last data row."""
     entries = [
-        ["time_tag", "density", "speed", "temperature"],
-        ["2026-05-01 19:00:00.000", "1.24", "441.7", "70000"],
-        ["2026-05-01 19:19:00.000", "0.86", "444.1", "72052"],
+        _SW_HEADER,
+        ["2026-05-01 19:00:00", 441.7, 1.24, 70000, 0.1, 0.2, 2.0, 4.0, -441, 1, 1, ""],
+        [
+            "2026-05-01 19:19:00",
+            444.1,
+            0.86,
+            72052,
+            0.7,
+            -4.6,
+            0.39,
+            4.69,
+            -444,
+            1,
+            1,
+            "",
+        ],
     ]
-    result = _parse_noaa_plasma(entries)
-    assert result["solar_wind_density"] == 0.86
+    result = _parse_noaa_solar_wind(entries)
     assert result["solar_wind_speed_noaa"] == 444.1
-
-
-def test_parse_noaa_plasma_single_data_row():
-    """Plasma parse works with exactly one data row."""
-    entries = [
-        ["time_tag", "density", "speed", "temperature"],
-        ["2026-05-01 00:00:00.000", "5.0", "350.0", "40000"],
-    ]
-    result = _parse_noaa_plasma(entries)
-    assert result["solar_wind_density"] == 5.0
-    assert result["solar_wind_speed_noaa"] == 350.0
-
-
-def test_parse_noaa_plasma_empty_raises():
-    """Empty plasma payload raises UpdateFailed."""
-    with pytest.raises(UpdateFailed):
-        _parse_noaa_plasma([])
-
-
-def test_parse_noaa_plasma_header_only_raises():
-    """Plasma payload with only a header row raises UpdateFailed."""
-    with pytest.raises(UpdateFailed):
-        _parse_noaa_plasma([["time_tag", "density", "speed", "temperature"]])
-
-
-def test_parse_noaa_plasma_null_values_return_none():
-    """Plasma parse returns None for sensor values when NOAA sends null data."""
-    entries = [
-        ["time_tag", "density", "speed", "temperature"],
-        ["2026-05-01 00:00:00.000", None, None, None],
-    ]
-    result = _parse_noaa_plasma(entries)
-    assert result["solar_wind_density"] is None
-    assert result["solar_wind_speed_noaa"] is None
-
-
-def test_parse_noaa_mag_returns_bz_and_bt():
-    """Mag parse extracts bz_gsm and bt from last data row."""
-    entries = [
-        ["time_tag", "bx_gsm", "by_gsm", "bz_gsm", "lon_gsm", "lat_gsm", "bt"],
-        ["2026-05-01 19:19:00.000", "0.72", "-4.62", "0.39", "278.82", "4.82", "4.69"],
-    ]
-    result = _parse_noaa_mag(entries)
+    assert result["solar_wind_density"] == 0.86
     assert result["solar_bz_noaa"] == 0.39
     assert result["solar_wind_bt"] == 4.69
 
 
-def test_parse_noaa_mag_negative_bz():
-    """Mag parse handles negative Bz correctly."""
+def test_parse_noaa_solar_wind_negative_bz():
+    """Solar wind parse handles negative Bz correctly."""
     entries = [
-        ["time_tag", "bx_gsm", "by_gsm", "bz_gsm", "lon_gsm", "lat_gsm", "bt"],
-        ["2026-05-01 20:00:00.000", "-1.0", "2.0", "-8.5", "270.0", "3.0", "9.2"],
+        _SW_HEADER,
+        ["2026-05-01 20:00:00", 350.0, 5.0, 40000, -1, 2, -8.5, 9.2, -350, 1, 1, ""],
     ]
-    result = _parse_noaa_mag(entries)
+    result = _parse_noaa_solar_wind(entries)
     assert result["solar_bz_noaa"] == -8.5
     assert result["solar_wind_bt"] == 9.2
 
 
-def test_parse_noaa_mag_empty_raises():
-    """Empty mag payload raises UpdateFailed."""
+def test_parse_noaa_solar_wind_empty_raises():
+    """Empty solar wind payload raises UpdateFailed."""
     with pytest.raises(UpdateFailed):
-        _parse_noaa_mag([])
+        _parse_noaa_solar_wind([])
 
 
-def test_parse_noaa_mag_short_row_raises():
-    """Mag row with fewer than 7 columns raises UpdateFailed."""
+def test_parse_noaa_solar_wind_header_only_raises():
+    """Solar wind payload with only a header row raises UpdateFailed."""
     with pytest.raises(UpdateFailed):
-        _parse_noaa_mag(
-            [
-                ["time_tag", "bx_gsm", "by_gsm", "bz_gsm"],
-                ["2026-05-01 00:00:00.000", "0.0", "0.0", "-2.0"],
-            ]
-        )
+        _parse_noaa_solar_wind([_SW_HEADER])
+
+
+def test_parse_noaa_solar_wind_short_row_raises():
+    """Row with fewer than 8 columns raises UpdateFailed."""
+    with pytest.raises(UpdateFailed):
+        _parse_noaa_solar_wind([_SW_HEADER, ["2026-05-01 00:00:00", 400.0, 1.0, 50000]])
+
+
+def test_parse_noaa_solar_wind_null_values_return_none():
+    """Parse returns None for sensor values when NOAA sends null data."""
+    entries = [
+        _SW_HEADER,
+        ["2026-05-01 00:00:00", None, None, None, None, None, None, None],
+    ]
+    result = _parse_noaa_solar_wind(entries)
+    assert result["solar_wind_speed_noaa"] is None
+    assert result["solar_wind_density"] is None
+    assert result["solar_bz_noaa"] is None
+    assert result["solar_wind_bt"] is None
 
 
 # ---------------------------------------------------------------------------
-# Integration test: plasma + mag fields flow through coordinator
+# Integration test: solar wind fields flow through coordinator
 # ---------------------------------------------------------------------------
 
-PLASMA_PAYLOAD = json.dumps(
+SOLAR_WIND_PAYLOAD = json.dumps(
     [
-        ["time_tag", "density", "speed", "temperature"],
-        ["2026-05-01 00:00:00.000", "1.0", "400.0", "50000"],
-        ["2026-05-01 00:19:00.000", "2.5", "500.0", "60000"],
-    ]
-)
-
-MAG_PAYLOAD = json.dumps(
-    [
-        ["time_tag", "bx_gsm", "by_gsm", "bz_gsm", "lon_gsm", "lat_gsm", "bt"],
-        ["2026-05-01 00:00:00.000", "1.0", "2.0", "-5.5", "270.0", "3.0", "6.1"],
-        ["2026-05-01 00:19:00.000", "0.5", "-3.0", "-8.2", "260.0", "4.0", "8.7"],
+        _SW_HEADER,
+        ["2026-05-01 00:00:00", 400.0, 1.0, 50000, 1, 2, -5.5, 6.1, -400, 1, 1, ""],
+        ["2026-05-01 00:19:00", 500.0, 2.5, 60000, 0.5, -3, -8.2, 8.7, -500, 1, 1, ""],
     ]
 )
 
 
-async def test_plasma_mag_fields_in_coordinator(hass):
-    """Plasma and mag fields flow through _async_update_data correctly."""
+async def test_solar_wind_fields_in_coordinator(hass):
+    """Solar wind fields flow through _async_update_data correctly."""
     coordinator = SolarCoordinator(hass, _make_entry(hass))
 
     async def mock_fetch(url: str) -> str:
-        if "plasma-2-hour" in url:
-            return PLASMA_PAYLOAD
-        if "mag-2-hour" in url:
-            return MAG_PAYLOAD
+        if "propagated-solar-wind" in url:
+            return SOLAR_WIND_PAYLOAD
         if "swpc.noaa.gov" in url:
             return NOAA_PAYLOAD
         if "hamqsl.com" in url:
@@ -886,8 +875,8 @@ async def test_plasma_mag_fields_in_coordinator(hass):
     with patch.object(coordinator, "_fetch_text", side_effect=mock_fetch):
         data = await coordinator._async_update_data()
 
-    assert data["solar_wind_density"] == 2.5
     assert data["solar_wind_speed_noaa"] == 500.0
+    assert data["solar_wind_density"] == 2.5
     assert data["solar_bz_noaa"] == -8.2
     assert data["solar_wind_bt"] == 8.7
 
@@ -1024,10 +1013,8 @@ async def test_kp_forecast_dst_fields_in_coordinator(hass):
             return KP_FORECAST_PAYLOAD
         if "kyoto-dst" in url:
             return DST_PAYLOAD
-        if "plasma-2-hour" in url:
-            return PLASMA_PAYLOAD
-        if "mag-2-hour" in url:
-            return MAG_PAYLOAD
+        if "propagated-solar-wind" in url:
+            return SOLAR_WIND_PAYLOAD
         if "swpc.noaa.gov" in url:
             return NOAA_PAYLOAD
         if "hamqsl.com" in url:
@@ -1141,10 +1128,8 @@ async def test_predicted_index_fields_in_coordinator(hass):
             return PREDICTED_A_PAYLOAD
         if "predicted_f107cm_flux" in url:
             return PREDICTED_SFI_PAYLOAD
-        if "plasma-2-hour" in url:
-            return PLASMA_PAYLOAD
-        if "mag-2-hour" in url:
-            return MAG_PAYLOAD
+        if "propagated-solar-wind" in url:
+            return SOLAR_WIND_PAYLOAD
         if "noaa-planetary-k-index-forecast" in url:
             return KP_FORECAST_PAYLOAD
         if "kyoto-dst" in url:
@@ -1256,10 +1241,8 @@ async def test_solar_regions_field_in_coordinator(hass):
             return PREDICTED_A_PAYLOAD
         if "predicted_f107cm_flux" in url:
             return PREDICTED_SFI_PAYLOAD
-        if "plasma-2-hour" in url:
-            return PLASMA_PAYLOAD
-        if "mag-2-hour" in url:
-            return MAG_PAYLOAD
+        if "propagated-solar-wind" in url:
+            return SOLAR_WIND_PAYLOAD
         if "noaa-planetary-k-index-forecast" in url:
             return KP_FORECAST_PAYLOAD
         if "kyoto-dst" in url:

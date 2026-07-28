@@ -34,13 +34,12 @@ from .const import (
     URL_NOAA_DST,
     URL_NOAA_KP_1M,
     URL_NOAA_KP_FORECAST,
-    URL_NOAA_MAG,
-    URL_NOAA_PLASMA,
     URL_NOAA_PREDICTED_A,
     URL_NOAA_PREDICTED_SFI,
     URL_NOAA_PROBABILITIES,
     URL_NOAA_SCALES,
     URL_NOAA_SOLAR_REGIONS,
+    URL_NOAA_SOLAR_WIND,
     URL_NOAA_XRAY,
 )
 from .types import HamRadioConfigEntry
@@ -241,45 +240,32 @@ def _parse_noaa_alerts(entries: Any) -> dict[str, Any]:
     }
 
 
-def _parse_noaa_plasma(entries: Any) -> dict[str, Any]:
-    """Parse NOAA real-time solar wind plasma into coordinator data keys."""
+def _parse_noaa_solar_wind(entries: Any) -> dict[str, Any]:
+    """Parse NOAA propagated solar wind into coordinator data keys.
+
+    Row schema: [time_tag, speed, density, temperature, bx, by, bz, bt, ...].
+    Speed, density, Bz and Bt all arrive in a single payload.
+    """
     if not isinstance(entries, list) or len(entries) < 2:
-        raise UpdateFailed("NOAA plasma payload is missing data rows")
+        raise UpdateFailed("NOAA solar wind payload is missing data rows")
     header = entries[0]
     if not isinstance(header, list) or not header or header[0] != "time_tag":
-        raise UpdateFailed("NOAA plasma payload header row is unexpected")
+        raise UpdateFailed("NOAA solar wind payload header row is unexpected")
     last = entries[-1]
-    if not isinstance(last, list) or len(last) < 3:
-        raise UpdateFailed("NOAA plasma data row has unexpected shape")
-    try:
-        density = float(last[1]) if last[1] is not None else None
-        speed = float(last[2]) if last[2] is not None else None
-    except (ValueError, TypeError):
-        density = speed = None
-    return {
-        "solar_wind_density": density,
-        "solar_wind_speed_noaa": speed,
-    }
+    if not isinstance(last, list) or len(last) < 8:
+        raise UpdateFailed("NOAA solar wind data row has unexpected shape")
 
+    def _num(value: Any) -> float | None:
+        try:
+            return float(value) if value is not None else None
+        except (ValueError, TypeError):
+            return None
 
-def _parse_noaa_mag(entries: Any) -> dict[str, Any]:
-    """Parse NOAA real-time solar wind magnetometer into coordinator data keys."""
-    if not isinstance(entries, list) or len(entries) < 2:
-        raise UpdateFailed("NOAA mag payload is missing data rows")
-    header = entries[0]
-    if not isinstance(header, list) or not header or header[0] != "time_tag":
-        raise UpdateFailed("NOAA mag payload header row is unexpected")
-    last = entries[-1]
-    if not isinstance(last, list) or len(last) < 7:
-        raise UpdateFailed("NOAA mag data row has unexpected shape")
-    try:
-        bz_gsm = float(last[3]) if last[3] is not None else None
-        bt = float(last[6]) if last[6] is not None else None
-    except (ValueError, TypeError):
-        bz_gsm = bt = None
     return {
-        "solar_bz_noaa": bz_gsm,
-        "solar_wind_bt": bt,
+        "solar_wind_speed_noaa": _num(last[1]),
+        "solar_wind_density": _num(last[2]),
+        "solar_bz_noaa": _num(last[6]),
+        "solar_wind_bt": _num(last[7]),
     }
 
 
@@ -438,8 +424,7 @@ class SolarCoordinator(DataUpdateCoordinator[dict[str, Any]]):  # type: ignore[m
             ("NOAA probabilities", self._update_noaa_probabilities),
             ("NOAA K-index", self._update_noaa_kp),
             ("NOAA alerts", self._update_noaa_alerts),
-            ("NOAA plasma", self._update_noaa_plasma),
-            ("NOAA mag", self._update_noaa_mag),
+            ("NOAA solar wind", self._update_noaa_solar_wind),
             ("NOAA KP forecast", self._update_noaa_kp_forecast),
             ("NOAA DST", self._update_noaa_dst),
             ("NOAA predicted A-index", self._update_noaa_predicted_a),
@@ -610,13 +595,9 @@ class SolarCoordinator(DataUpdateCoordinator[dict[str, Any]]):  # type: ignore[m
         entries = await self._fetch_json(URL_NOAA_ALERTS)
         data.update(_parse_noaa_alerts(entries))
 
-    async def _update_noaa_plasma(self, data: dict[str, Any]) -> None:
-        entries = await self._fetch_json(URL_NOAA_PLASMA)
-        data.update(_parse_noaa_plasma(entries))
-
-    async def _update_noaa_mag(self, data: dict[str, Any]) -> None:
-        entries = await self._fetch_json(URL_NOAA_MAG)
-        data.update(_parse_noaa_mag(entries))
+    async def _update_noaa_solar_wind(self, data: dict[str, Any]) -> None:
+        entries = await self._fetch_json(URL_NOAA_SOLAR_WIND)
+        data.update(_parse_noaa_solar_wind(entries))
 
     async def _update_noaa_kp_forecast(self, data: dict[str, Any]) -> None:
         entries = await self._fetch_json(URL_NOAA_KP_FORECAST)

@@ -70,6 +70,10 @@ Solar sensors expose source freshness attributes for NOAA and hamqsl. MUF sensor
 
 Example Lovelace dashboards live in `dashboards/`.
 
+![Amateur Radio Propagation dashboard](docs/images/dashboards/02-mushroom-operator.png)
+
+See the [dashboard gallery](docs/DASHBOARDS.md#screenshots) for screenshots of every dashboard.
+
 | Dashboard | Dependencies | Best for |
 |-----------|--------------|----------|
 | `vanilla-dashboard.yaml` | None | Quick start |
