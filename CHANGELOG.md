@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [2.2.1] - 2026-07-27
+
 ### Changed
 
 - Synced example dashboards to include the full VHF sporadic-E and aurora sensor set. `mushroom-operator`, `operator-go-no-go`, `browser-mod`, and `layout-card-desktop` were missing some of the 2m/6m/4m E-Skip EU and aurora (activity, latitude) tiles that the other dashboards already had.
