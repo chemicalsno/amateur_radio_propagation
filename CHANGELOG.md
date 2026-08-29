@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [2.3.0] - 2026-08-28
+
 ### Added
 
 - New sensor **VHF E-Skip North America 6m** (`solar_vhf_eskip_na_6m`). hamqsl only publishes band-specific Sporadic-E for Europe, so the North America 6m outlook is derived from the maximum foEs across North American kc2g ionosondes (foEs x obliquity vs the 50 MHz single-hop threshold). It confirms real openings but, being point measurements, may miss patchy ones; attributes expose the driving station, estimated Es MUF, and how many NA stations reported. The example dashboards now include a "6m E-Skip NA" tile alongside the existing 6m EU one. Resolves the North America 6m request in issue #12.
