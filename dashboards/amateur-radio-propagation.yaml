@@ -514,6 +514,18 @@ views:
                     but enables unusual VHF DX.'
           - type: custom:button-card
             template: prop_tile
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na_6m
+            name: 6m E-Skip NA
+            label: 50 MHz Sporadic-E over North America.
+            styles:
+              card:
+                - '--arp-tip': >-
+                    '6m sporadic-E over North America: derived from ionosonde
+                    foEs across NA stations. A high reading means 50 MHz
+                    single-hop Es is likely somewhere over North America.
+                    Strongest May-Aug.'
+          - type: custom:button-card
+            template: prop_tile
             entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
             name: 6m E-Skip EU
             label: 50 MHz Sporadic-E over Europe.

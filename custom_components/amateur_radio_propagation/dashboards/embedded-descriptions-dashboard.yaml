@@ -206,6 +206,8 @@ views:
                 name: 2m E-Skip EU
               - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
                 name: 6m E-Skip EU
+              - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na_6m
+                name: 6m E-Skip NA
               - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_4m
                 name: 4m E-Skip EU
 
