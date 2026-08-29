@@ -84,6 +84,8 @@ views:
             name: Europe 2m
           - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
             name: Europe 6m
+          - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na_6m
+            name: North America 6m
           - entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_4m
             name: Europe 4m
           - entity: sensor.amateur_radio_propagation_solar_active_regions

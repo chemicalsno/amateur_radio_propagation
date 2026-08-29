@@ -112,6 +112,9 @@
       "solar_vhf_eskip_eu_4m": {
         "default": "mdi:sine-wave"
       },
+      "solar_vhf_eskip_na_6m": {
+        "default": "mdi:sine-wave"
+      },
       "solar_hf_80_40_day": {
         "default": "mdi:signal-cellular-2",
         "state": {

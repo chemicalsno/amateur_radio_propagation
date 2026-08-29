@@ -30,6 +30,7 @@ from custom_components.amateur_radio_propagation.coordinator_solar import (
     _parse_noaa_predicted_a,
     _parse_noaa_predicted_sfi,
     _parse_noaa_solar_regions,
+    _parse_kc2g_na_es,
 )
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
@@ -879,6 +880,137 @@ async def test_solar_wind_fields_in_coordinator(hass):
     assert data["solar_wind_density"] == 2.5
     assert data["solar_bz_noaa"] == -8.2
     assert data["solar_wind_bt"] == 8.7
+
+
+# ---------------------------------------------------------------------------
+# NA 6m sporadic-E (derived from kc2g foEs) parse tests
+# ---------------------------------------------------------------------------
+
+
+def _na_station(foes, *, lat=40.0, lon=255.0, name="Boulder", code="BC840", time=None):
+    """Build a kc2g station record. Omitting time => treated as fresh."""
+    rec = {
+        "foes": foes,
+        "station": {
+            "name": name,
+            "code": code,
+            "latitude": str(lat),
+            "longitude": str(lon),
+        },
+    }
+    if time is not None:
+        rec["time"] = time
+    return rec
+
+
+def test_parse_kc2g_na_es_open():
+    """foEs x 5 obliquity clearing 50 MHz reports a 6m opening with attributes."""
+    result = _parse_kc2g_na_es([_na_station(10.5, name="Austin", code="AU930")])
+    assert result["solar_vhf_eskip_na_6m"] == "50MHz ES"
+    attrs = result["solar_vhf_eskip_na_6m_attrs"]
+    assert attrs["foes_max_mhz"] == 10.5
+    assert attrs["es_muf_estimate_mhz"] == 52.5
+    assert attrs["foes_station"] == "Austin"
+    assert attrs["stations_reporting"] == 1
+
+
+def test_parse_kc2g_na_es_high_muf():
+    """Elevated but sub-50 MHz Es MUF reports High MUF."""
+    result = _parse_kc2g_na_es([_na_station(8.5)])
+    assert result["solar_vhf_eskip_na_6m"] == "High MUF"
+    assert result["solar_vhf_eskip_na_6m_attrs"]["es_muf_estimate_mhz"] == 42.5
+
+
+def test_parse_kc2g_na_es_band_closed():
+    """Quiet foEs reports Band Closed."""
+    result = _parse_kc2g_na_es([_na_station(3.0)])
+    assert result["solar_vhf_eskip_na_6m"] == "Band Closed"
+
+
+def test_parse_kc2g_na_es_picks_max_across_stations():
+    """The strongest NA station drives the outlook."""
+    result = _parse_kc2g_na_es(
+        [_na_station(4.0, name="Boulder"), _na_station(10.2, name="Wallops")]
+    )
+    assert result["solar_vhf_eskip_na_6m"] == "50MHz ES"
+    assert result["solar_vhf_eskip_na_6m_attrs"]["foes_station"] == "Wallops"
+    assert result["solar_vhf_eskip_na_6m_attrs"]["stations_reporting"] == 2
+
+
+def test_parse_kc2g_na_es_excludes_non_na():
+    """Non-North-American stations are ignored; only NA is unavailable => None."""
+    # El Arenosillo, Spain (lon 353.3 -> -6.7): outside NA box.
+    result = _parse_kc2g_na_es([_na_station(12.0, lat=37.1, lon=353.3, name="Spain")])
+    assert result["solar_vhf_eskip_na_6m"] is None
+
+
+def test_parse_kc2g_na_es_longitude_0_360():
+    """kc2g 0-360 longitudes are converted; Austin (lon 262.3) counts as NA."""
+    result = _parse_kc2g_na_es([_na_station(9.0, lat=30.4, lon=262.3, name="Austin")])
+    assert result["solar_vhf_eskip_na_6m"] == "High MUF"
+    assert result["solar_vhf_eskip_na_6m_attrs"]["stations_reporting"] == 1
+
+
+def test_parse_kc2g_na_es_missing_foes_is_band_closed():
+    """A fresh NA station with no foEs trace means Es absent, not missing data."""
+    result = _parse_kc2g_na_es([_na_station(None)])
+    assert result["solar_vhf_eskip_na_6m"] == "Band Closed"
+    assert result["solar_vhf_eskip_na_6m_attrs"]["foes_max_mhz"] is None
+
+
+def test_parse_kc2g_na_es_garbage_foes_ignored():
+    """Non-numeric or out-of-range foEs is rejected (autoscaler junk)."""
+    result = _parse_kc2g_na_es([_na_station("n/a"), _na_station(99.0, name="junk")])
+    assert result["solar_vhf_eskip_na_6m"] == "Band Closed"
+    assert result["solar_vhf_eskip_na_6m_attrs"]["foes_max_mhz"] is None
+
+
+def test_parse_kc2g_na_es_all_stale_returns_none():
+    """When every NA station is stale, the sensor reports unavailable (None)."""
+    result = _parse_kc2g_na_es([_na_station(10.5, time="2020-01-01T00:00:00Z")])
+    assert result["solar_vhf_eskip_na_6m"] is None
+    assert result["solar_vhf_eskip_na_6m_attrs"] is None
+
+
+def test_parse_kc2g_na_es_not_a_list_raises():
+    """A non-list payload raises UpdateFailed."""
+    with pytest.raises(UpdateFailed):
+        _parse_kc2g_na_es({"not": "a list"})
+
+
+NA_ES_PAYLOAD = json.dumps(
+    [
+        {
+            "foes": 11.0,
+            "station": {
+                "name": "Wallops Island, VA, USA",
+                "code": "WI937",
+                "latitude": "37.9",
+                "longitude": "284.5",
+            },
+        },
+    ]
+)
+
+
+async def test_na_es_fields_in_coordinator(hass):
+    """NA 6m Es outlook flows through _async_update_data from kc2g."""
+    coordinator = SolarCoordinator(hass, _make_entry(hass))
+
+    async def mock_fetch(url: str) -> str:
+        if "prop.kc2g.com" in url:
+            return NA_ES_PAYLOAD
+        if "swpc.noaa.gov" in url:
+            return NOAA_PAYLOAD
+        if "hamqsl.com" in url:
+            return HAMQSL_PAYLOAD
+        raise ValueError(f"Unexpected URL: {url}")
+
+    with patch.object(coordinator, "_fetch_text", side_effect=mock_fetch):
+        data = await coordinator._async_update_data()
+
+    assert data["solar_vhf_eskip_na_6m"] == "50MHz ES"
+    assert data["solar_vhf_eskip_na_6m_attrs"]["foes_max_mhz"] == 11.0
 
 
 # ---------------------------------------------------------------------------

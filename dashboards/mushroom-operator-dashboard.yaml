@@ -155,6 +155,9 @@ views:
             entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_6m
             name: 6m E-Skip EU
           - type: custom:mushroom-entity-card
+            entity: sensor.amateur_radio_propagation_solar_vhf_eskip_na_6m
+            name: 6m E-Skip NA
+          - type: custom:mushroom-entity-card
             entity: sensor.amateur_radio_propagation_solar_vhf_eskip_eu_4m
             name: 4m E-Skip EU
           - type: custom:mushroom-entity-card

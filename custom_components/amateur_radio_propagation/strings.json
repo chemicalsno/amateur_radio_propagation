@@ -97,6 +97,7 @@
       "solar_vhf_eskip_na":        { "name": "VHF E-Skip North America" },
       "solar_vhf_eskip_eu_6m":     { "name": "VHF E-Skip Europe 6m" },
       "solar_vhf_eskip_eu_4m":     { "name": "VHF E-Skip Europe 4m" },
+      "solar_vhf_eskip_na_6m":     { "name": "VHF E-Skip North America 6m" },
       "solar_aurora_activity":     { "name": "Aurora Activity" },
       "solar_aurora_latitude":     { "name": "Aurora Latitude" },
       "solar_proton_flux":         { "name": "Solar Proton Flux" },
