@@ -26,10 +26,18 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .const import (
     ATTRIBUTION_SOLAR,
     DOMAIN,
+    ES_FOES_MAX_MHZ,
+    ES_MUF_HIGH_MHZ,
+    ES_MUF_OPEN_MHZ,
+    ES_NA_LAT_RANGE,
+    ES_NA_LON_RANGE,
+    ES_OBLIQUITY,
+    ES_STALE_THRESHOLD,
     POLL_INTERVAL_HAMQSL,
     POLL_INTERVAL_NOAA,
     REQUEST_TIMEOUT,
     URL_HAMQSL_XML,
+    URL_KC2G_STATIONS,
     URL_NOAA_ALERTS,
     URL_NOAA_DST,
     URL_NOAA_KP_1M,
@@ -42,6 +50,7 @@ from .const import (
     URL_NOAA_SOLAR_WIND,
     URL_NOAA_XRAY,
 )
+from .coordinator_muf import _kc2g_is_stale
 from .types import HamRadioConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
@@ -269,6 +278,80 @@ def _parse_noaa_solar_wind(entries: Any) -> dict[str, Any]:
     }
 
 
+def _parse_kc2g_na_es(entries: Any) -> dict[str, Any]:
+    """Derive a North America 6m sporadic-E outlook from kc2g ionosonde foEs.
+
+    hamqsl only publishes band-specific Es for Europe, so the North America 6m
+    outlook is derived here from the maximum fresh foEs across North American
+    ionosondes, converted to an estimated Es MUF (foEs x obliquity). Single-hop
+    Es reaches 50 MHz once that estimate clears the band. This confirms real
+    openings but, being point measurements, can miss patchy ones.
+    """
+    if not isinstance(entries, list):
+        raise UpdateFailed("kc2g stations.json did not return a list")
+
+    lat_lo, lat_hi = ES_NA_LAT_RANGE
+    lon_lo, lon_hi = ES_NA_LON_RANGE
+    fresh = 0
+    best_name: str | None = None
+    best_foes: float | None = None
+    per_station: dict[str, float | None] = {}
+
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        station = entry.get("station")
+        if not isinstance(station, dict):
+            continue
+        try:
+            lat = float(station["latitude"])
+            lon = float(station["longitude"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if lon > 180.0:  # kc2g reports longitude in 0-360 form
+            lon -= 360.0
+        if not (lat_lo <= lat <= lat_hi and lon_lo <= lon <= lon_hi):
+            continue
+        if _kc2g_is_stale(entry, ES_STALE_THRESHOLD):
+            continue
+        fresh += 1
+        raw = entry.get("foes")
+        try:
+            foes = float(raw) if raw is not None else None
+        except (TypeError, ValueError):
+            foes = None
+        if foes is not None and not 0.0 < foes < ES_FOES_MAX_MHZ:
+            foes = None  # reject autoscaler junk / non-positive values
+        per_station[str(station.get("code", "?"))] = foes
+        if foes is not None and (best_foes is None or foes > best_foes):
+            best_foes = foes
+            best_name = station.get("name")
+
+    if fresh == 0:
+        # No fresh North American ionosonde data: report unavailable.
+        return {"solar_vhf_eskip_na_6m": None, "solar_vhf_eskip_na_6m_attrs": None}
+
+    es_muf = round((best_foes or 0.0) * ES_OBLIQUITY, 1)
+    if es_muf >= ES_MUF_OPEN_MHZ:
+        state = "50MHz ES"
+    elif es_muf >= ES_MUF_HIGH_MHZ:
+        state = "High MUF"
+    else:
+        state = "Band Closed"
+
+    return {
+        "solar_vhf_eskip_na_6m": state,
+        "solar_vhf_eskip_na_6m_attrs": {
+            "foes_max_mhz": best_foes,
+            "foes_station": best_name,
+            "es_muf_estimate_mhz": es_muf,
+            "stations_reporting": fresh,
+            "station_foes": per_station,
+            "method": "max NA ionosonde foEs x 5.0 obliquity (single-hop Es)",
+        },
+    }
+
+
 def _parse_noaa_kp_forecast(entries: Any) -> dict[str, Any]:
     """Parse NOAA planetary Kp index forecast into coordinator data keys."""
     if not isinstance(entries, list) or not entries:
@@ -429,6 +512,7 @@ class SolarCoordinator(DataUpdateCoordinator[dict[str, Any]]):  # type: ignore[m
             ("NOAA DST", self._update_noaa_dst),
             ("NOAA predicted A-index", self._update_noaa_predicted_a),
             ("NOAA predicted SFI", self._update_noaa_predicted_sfi),
+            ("kc2g foEs", self._update_kc2g_es),
         ]
 
         # Skip sources whose circuit breaker is open; run the rest in parallel
@@ -598,6 +682,10 @@ class SolarCoordinator(DataUpdateCoordinator[dict[str, Any]]):  # type: ignore[m
     async def _update_noaa_solar_wind(self, data: dict[str, Any]) -> None:
         entries = await self._fetch_json(URL_NOAA_SOLAR_WIND)
         data.update(_parse_noaa_solar_wind(entries))
+
+    async def _update_kc2g_es(self, data: dict[str, Any]) -> None:
+        entries = await self._fetch_json(URL_KC2G_STATIONS)
+        data.update(_parse_kc2g_na_es(entries))
 
     async def _update_noaa_kp_forecast(self, data: dict[str, Any]) -> None:
         entries = await self._fetch_json(URL_NOAA_KP_FORECAST)

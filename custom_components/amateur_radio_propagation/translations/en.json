@@ -178,6 +178,9 @@
       "solar_vhf_eskip_eu_4m": {
         "name": "VHF E-Skip Europe 4m"
       },
+      "solar_vhf_eskip_na_6m": {
+        "name": "VHF E-Skip North America 6m"
+      },
       "solar_aurora_activity": {
         "name": "Aurora Activity"
       },

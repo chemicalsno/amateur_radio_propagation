@@ -238,6 +238,10 @@ class HamRadioSensor(
             message = (self.coordinator.data or {}).get("solar_alert_message")
             if message:
                 attrs["latest_alert"] = message
+        if self.entity_description.key == "solar_vhf_eskip_na_6m":
+            extra = (self.coordinator.data or {}).get("solar_vhf_eskip_na_6m_attrs")
+            if extra:
+                attrs.update(extra)
         return attrs
 
     @property

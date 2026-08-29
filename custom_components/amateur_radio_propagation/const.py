@@ -81,7 +81,8 @@ URL_KC2G_STATIONS: Final = "https://prop.kc2g.com/api/stations.json"
 # Attribution strings
 # ---------------------------------------------------------------------------
 ATTRIBUTION_SOLAR: Final = (
-    "Data provided by NOAA SWPC (services.swpc.noaa.gov) and hamqsl.com"
+    "Data provided by NOAA SWPC (services.swpc.noaa.gov), hamqsl.com, "
+    "and the kc2g.com ionosonde network (prop.kc2g.com)"
 )
 ATTRIBUTION_MUF: Final = (
     "Data provided by the kc2g.com ionosonde network (prop.kc2g.com)"
@@ -94,6 +95,20 @@ POLL_INTERVAL_NOAA: Final = timedelta(minutes=15)
 POLL_INTERVAL_HAMQSL: Final = timedelta(hours=3)
 POLL_INTERVAL_MUF: Final = timedelta(minutes=30)
 KC2G_STALE_THRESHOLD: Final = timedelta(hours=3)
+
+# --- North America 6m sporadic-E, derived from kc2g ionosonde foEs ---
+# hamqsl only publishes band-specific Es for Europe, so the NA 6m outlook is
+# derived from the maximum foEs across North American ionosondes. Single-hop Es
+# reaches 50 MHz when foEs x obliquity clears the band; the obliquity factor is
+# capped near 5 by earth curvature at Es height (~105 km), so ~10 MHz foEs opens
+# 6m at maximum single-hop distance.
+ES_NA_LAT_RANGE: Final = (15.0, 72.0)
+ES_NA_LON_RANGE: Final = (-170.0, -50.0)
+ES_OBLIQUITY: Final = 5.0
+ES_MUF_OPEN_MHZ: Final = 50.0
+ES_MUF_HIGH_MHZ: Final = 40.0
+ES_FOES_MAX_MHZ: Final = 25.0  # clamp autoscaler junk above this
+ES_STALE_THRESHOLD: Final = timedelta(hours=2)
 REQUEST_TIMEOUT: Final = 10  # seconds — NOAA/hamqsl respond in <1s normally
 
 # ---------------------------------------------------------------------------
@@ -300,6 +315,11 @@ SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
         key="solar_vhf_eskip_eu_4m",
         translation_key="solar_vhf_eskip_eu_4m",
         name="VHF E-Skip Europe 4m",
+    ),
+    SensorEntityDescription(
+        key="solar_vhf_eskip_na_6m",
+        translation_key="solar_vhf_eskip_na_6m",
+        name="VHF E-Skip North America 6m",
     ),
     SensorEntityDescription(
         key="solar_aurora_activity",
