@@ -4,6 +4,12 @@
 
 No unreleased changes.
 
+## [2.3.1] - 2026-08-28
+
+### Fixed
+
+- Brand images now have real transparency. The bundled brand PNGs (`custom_components/amateur_radio_propagation/brand/` and the root HACS `brand/icon.png`) had a transparency checkerboard baked in as opaque pixels and no alpha channel, so Home Assistant rendered the integration icon on a visible checkerboard background. The checkerboard is converted to a true transparent background, base images are resized to the standard 256x256, and 512x512 `@2x` hDPI variants are added for all four brand slots.
+
 ## [2.3.0] - 2026-08-28
 
 ### Added
