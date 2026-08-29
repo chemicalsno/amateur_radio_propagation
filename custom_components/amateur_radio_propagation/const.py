@@ -17,7 +17,7 @@ DOMAIN: Final = "amateur_radio_propagation"
 PLATFORMS: Final = [Platform.SENSOR]
 MANUFACTURER: Final = "hamqsl.com and kc2g.com"
 MODEL: Final = "Amateur Radio Propagation"
-VERSION: Final = "2.2.1"
+VERSION: Final = "2.3.0"
 CONFIGURATION_URL: Final = (
     "https://github.com/chemicalsno/amateur_radio_propagation#readme"
 )
