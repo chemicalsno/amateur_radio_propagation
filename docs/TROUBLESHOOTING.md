@@ -30,7 +30,7 @@ Actions:
 
 ## Solar Data Stopped Updating
 
-Solar Data combines NOAA and hamqsl feeds. One source can fail while the other continues updating.
+Solar Data combines NOAA, hamqsl, and kc2g foEs feeds. One source can fail while the others continue updating.
 
 Check:
 
@@ -39,6 +39,17 @@ Check:
 - Whether hamqsl.com or NOAA SWPC endpoints are temporarily unavailable.
 
 When previous data exists, the coordinator keeps last known values during transient failures.
+
+After 3 consecutive failures, a 15-minute source (NOAA fast endpoints or kc2g foEs) is skipped for 1 hour before it is retried. A source can stay stale for up to an hour after the upstream recovers.
+
+## NOAA Solar Data Is Unavailable Repair
+
+A **NOAA solar data is unavailable** repair issue appears when NOAA SWPC X-ray data has not been fetched for over an hour. It clears automatically on the next successful fetch.
+
+Check:
+
+- Home Assistant has internet access and can reach `services.swpc.noaa.gov`.
+- The [NOAA SWPC](https://www.swpc.noaa.gov/) site for outage notices.
 
 ## Missing Solar Sensors
 
@@ -94,7 +105,7 @@ Options:
 The optional smoke test calls live NOAA, hamqsl, and kc2g endpoints:
 
 ```bash
-python scripts/smoke_test.py
+uv run python scripts/smoke_test.py
 ```
 
 Use it only when you want to verify current upstream reachability. It is not part of the isolated test suite.

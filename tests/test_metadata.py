@@ -20,6 +20,7 @@ DASHBOARDS = ROOT / "dashboards"
 INSTALLED_DASHBOARDS = INTEGRATION / "dashboards"
 PLACEHOLDER_RE = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
 DASHBOARD_ENTITY_RE = re.compile(r"sensor\.amateur_radio_propagation_[a-zA-Z0-9_]+")
+MY_BLUEPRINT_LINK_RE = re.compile(r"my\.home-assistant\.io/\S*blueprint", re.IGNORECASE)
 CURATED_DASHBOARDS = (
     "bubble-card-dashboard.yaml",
     "embedded-descriptions-dashboard.yaml",
@@ -220,7 +221,10 @@ def test_dashboard_docs_do_not_link_unsupported_blueprint_imports(path: Path) ->
     text = path.read_text()
 
     assert "blueprint_import" not in text
-    assert "my.home-assistant" not in text
+    # Home Assistant has no dashboard blueprints, so My links to blueprint
+    # redirects, link builders, or badges are wrong; other My links such as
+    # hacs_repository are fine.
+    assert not MY_BLUEPRINT_LINK_RE.search(text)
     assert "lovelace.dashboards" in text
 
 
