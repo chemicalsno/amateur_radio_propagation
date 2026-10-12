@@ -3,7 +3,10 @@ description: ""
 triggers:
   - trigger: state
     entity_id: sensor.amateur_radio_propagation_solar_vhf_aurora
-    to: "Yes"
+    not_to:
+      - "Band Closed"
+      - "unavailable"
+      - "unknown"
 conditions: []
 actions:
   - data:
@@ -11,4 +14,3 @@ actions:
       title: "📡 6m Aurora Open"
     action: notify.mobile_app_iphone
 mode: single
-

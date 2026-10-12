@@ -1,0 +1,13 @@
+alias: "6m E-Skip Band Open Alert"
+description: ""
+trigger:
+  - platform: state
+    entity_id: sensor.amateur_radio_propagation_solar_vhf_eskip_na_6m
+    to: "50MHz ES"
+condition: []
+action:
+  - data:
+      message: "6m sporadic E is open!"
+      title: "📡 6m Band Open"
+    service: notify.mobile_app_iphone
+mode: single
