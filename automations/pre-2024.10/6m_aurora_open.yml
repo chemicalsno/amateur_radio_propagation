@@ -1,0 +1,16 @@
+alias: "6m Aurora Propagation Alert"
+description: ""
+trigger:
+  - platform: state
+    entity_id: sensor.amateur_radio_propagation_solar_vhf_aurora
+    not_to:
+      - "Band Closed"
+      - "unavailable"
+      - "unknown"
+condition: []
+action:
+  - data:
+      message: "6m Aurora propagation detected!"
+      title: "📡 6m Aurora Open"
+    service: notify.mobile_app_iphone
+mode: single

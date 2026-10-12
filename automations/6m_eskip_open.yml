@@ -2,8 +2,8 @@ alias: "6m E-Skip Band Open Alert"
 description: ""
 triggers:
   - trigger: state
-    entity_id: sensor.amateur_radio_propagation_solar_vhf_eskip_na
-    to: "Yes"
+    entity_id: sensor.amateur_radio_propagation_solar_vhf_eskip_na_6m
+    to: "50MHz ES"
 conditions: []
 actions:
   - data:
@@ -11,4 +11,3 @@ actions:
       title: "📡 6m Band Open"
     action: notify.mobile_app_iphone
 mode: single
-
