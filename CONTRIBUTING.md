@@ -5,32 +5,30 @@
 Requires Python 3.12+ and [`uv`](https://github.com/astral-sh/uv).
 
 ```bash
-uv venv
-uv pip install -r requirements_test.txt
+uv sync --frozen
 ```
 
 ## Running Tests
 
 ```bash
 # All tests
-pytest --asyncio-mode=auto tests/
+uv run pytest --asyncio-mode=auto tests/
 
 # Single test file
-pytest --asyncio-mode=auto tests/test_solar_coordinator.py
+uv run pytest --asyncio-mode=auto tests/test_solar_coordinator.py
 
 # Single test
-pytest --asyncio-mode=auto tests/test_init.py::test_solar_setup_and_unload
+uv run pytest --asyncio-mode=auto tests/test_init.py::test_solar_setup_and_unload
 
 # Type checks
-mypy custom_components/amateur_radio_propagation tests
-pyright
+uv run pyright
 
 # Formatting and lint
-ruff format --check custom_components tests scripts
-ruff check custom_components tests scripts
+uv run ruff format --check custom_components tests scripts
+uv run ruff check custom_components tests scripts
 
 # Smoke test against real APIs (no HA needed)
-python scripts/smoke_test.py
+uv run python scripts/smoke_test.py
 ```
 
 ## Project Structure
@@ -39,10 +37,13 @@ python scripts/smoke_test.py
 custom_components/amateur_radio_propagation/
   __init__.py          # Entry setup/unload
   const.py             # URLs, poll intervals, sensor descriptions, Choice enum
-  coordinator_solar.py # NOAA + hamqsl polling
+  coordinator_solar.py # NOAA + hamqsl + kc2g foEs polling
   coordinator_muf.py   # kc2g ionosonde polling
   config_flow.py       # UI config flow (solar vs MUF, station selection)
   sensor.py            # HamRadioSensor entity
+  diagnostics.py       # Redacted diagnostics export
+  dashboard_notify.py  # One-time dashboard notification for MUF entries
+  types.py             # Typed config entry alias
   strings.json         # Config flow strings (source of truth)
   translations/en.json # English translations
   manifest.json
@@ -52,11 +53,15 @@ tests/
   test_solar_coordinator.py
   test_muf_coordinator.py
   test_config_flow.py
+  test_dashboard_notify.py
+  test_diagnostics.py
+  test_metadata.py
+  test_sensor.py
 ```
 
 ## Code Conventions
 
-**Coordinators:** Each coordinator owns its own data fetching and parsing. `_async_update_data` raises `UpdateFailed` on any error — no silent swallowing. HTTP requests use `asyncio.timeout(REQUEST_TIMEOUT)` with `await req.text()` inside the context manager.
+**Coordinators:** Each coordinator owns its own data fetching and parsing. Parse helpers raise `UpdateFailed` on malformed payloads. `SolarCoordinator._async_update_data` logs per-source failures and keeps the last known values for that source, and raises `UpdateFailed` only when no source produced data. HTTP requests use `asyncio.timeout(REQUEST_TIMEOUT)` with `await req.text()` inside the context manager.
 
 **Datetime:** Always use `dt_util.utcnow()` and `dt_util.parse_datetime()` from `homeassistant.util.dt`. Never `datetime.now()`.
 
@@ -81,8 +86,8 @@ When adding a new sensor, add it to both `const.py` (or `_muf_descriptions`) and
 ## Pull Requests
 
 - Keep PRs focused — one logical change per PR
-- Tests must pass: `pytest --asyncio-mode=auto tests/`
-- Type and style checks must pass: `mypy`, `pyright`, `ruff format --check`, and `ruff check`
+- Tests must pass: `uv run pytest --asyncio-mode=auto tests/`
+- Type and style checks must pass: `pyright`, `ruff format --check`, and `ruff check`
 - Match existing code style — no new dependencies without discussion
 - Update `CHANGELOG.md` under an `[Unreleased]` section
 
@@ -91,4 +96,4 @@ When adding a new sensor, add it to both `const.py` (or `_muf_descriptions`) and
 Open an issue at `https://github.com/chemicalsno/amateur_radio_propagation/issues` with:
 - Home Assistant version
 - Integration version
-- Relevant log lines from **Settings → System → Logs** (filter for `ham_radio`)
+- Relevant log lines from **Settings → System → Logs** (filter for `amateur_radio_propagation`)

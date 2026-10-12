@@ -22,7 +22,7 @@ Source: hamqsl.com unless noted.
 
 ### HF Band Conditions
 
-Source: hamqsl.com. Values are typically `Good`, `Fair`, or `Poor`.
+Source: hamqsl.com. The day and night band sensors report `good`, `fair`, `poor`, or `band_closed`; the UI shows translated labels. Geomag Field and Noise Level are not normalized.
 
 | Sensor | Key | Description |
 |--------|-----|-------------|
@@ -76,6 +76,7 @@ Source: hamqsl.com.
 | VHF E-Skip Europe | `solar_vhf_eskip_eu` | text | Sporadic-E VHF outlook for Europe. |
 | VHF E-Skip North America | `solar_vhf_eskip_na` | text | Sporadic-E VHF outlook for North America. |
 | VHF E-Skip Europe 6m | `solar_vhf_eskip_eu_6m` | text | Sporadic-E outlook for 6m in Europe. |
+| VHF E-Skip North America 6m | `solar_vhf_eskip_na_6m` | text | Sporadic-E outlook for 6m in North America: `50MHz ES`, `High MUF`, or `Band Closed`. Derived from kc2g ionosonde foEs, not hamqsl. Unavailable when no North American ionosonde has reported within 2 hours. Attributes: `foes_max_mhz`, `foes_station`, `es_muf_estimate_mhz`, `stations_reporting`, `station_foes`, `method`. |
 | VHF E-Skip Europe 4m | `solar_vhf_eskip_eu_4m` | text | Sporadic-E outlook for 4m in Europe. |
 | Aurora Activity | `solar_aurora_activity` | 0-100 | Aurora activity level. |
 | Aurora Latitude | `solar_aurora_latitude` | degrees | Equatorward boundary of visible aurora. |

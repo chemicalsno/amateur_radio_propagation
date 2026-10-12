@@ -23,7 +23,8 @@ Surfaces real-time amateur radio propagation data as Home Assistant sensors.
 |--------|------|--------|
 | NOAA SWPC | X-Ray, solar wind, Kp, Dst, forecasts | 15 min |
 | hamqsl.com | Solar indices, band conditions | 3 hr |
-| kc2g.com | Ionosonde MUF/foF2 | 30 min |
+| kc2g.com | North America 6m sporadic-E (Solar Data) | 15 min |
+| kc2g.com | Ionosonde MUF/foF2 (MUF Station) | 30 min |
 
 ## Requirements
 

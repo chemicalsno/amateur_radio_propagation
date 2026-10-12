@@ -6,16 +6,16 @@ This integration is a Home Assistant custom integration under `custom_components
 
 | File | Responsibility |
 |------|----------------|
-| `manifest.json` | Integration metadata, Home Assistant version floor, issue tracker, and integration type. |
+| `manifest.json` | Integration metadata, issue tracker, and integration type. The Home Assistant version floor lives in the repository's `hacs.json`. |
 | `__init__.py` | Config entry setup/unload, coordinator creation, platform forwarding, runtime data storage. |
 | `config_flow.py` | Setup, reconfigure, options flow, station list lookup, duplicate entry checks. |
 | `const.py` | Domain constants, URLs, update intervals, sensor descriptions, config keys. |
-| `coordinator_solar.py` | NOAA and hamqsl fetch, parse, merge, freshness tracking, repair issues. |
+| `coordinator_solar.py` | NOAA, hamqsl, and kc2g foEs fetch, parse, merge, freshness tracking, circuit breaker, NOAA staleness repair. |
 | `coordinator_muf.py` | kc2g station fetch, parse, staleness checks, repair issues. |
 | `sensor.py` | Sensor entity creation, device info, unique IDs, availability, freshness attributes. |
 | `diagnostics.py` | Redacted diagnostics export. |
-| `dashboard_notify.py` | Optional local notification that points users to bundled dashboard examples. |
-| `repairs.py` | Repair flow behavior. |
+| `dashboard_notify.py` | One-time persistent notification per MUF entry with curated dashboard YAML pre-filled for that station. |
+| `types.py` | Typed `HamRadioConfigEntry` alias. |
 
 ## Config Entry Types
 
@@ -34,15 +34,18 @@ The integration uses Home Assistant `DataUpdateCoordinator` objects.
 
 ### Solar Coordinator
 
-`SolarCoordinator` combines NOAA and hamqsl data into one coordinator payload.
+`SolarCoordinator` combines NOAA, hamqsl, and kc2g foEs data into one coordinator payload.
 
 | Source | Interval | Data |
 |--------|----------|------|
 | NOAA SWPC fast endpoints | 15 min | X-ray, solar wind, Kp, Dst, forecasts, alerts. |
 | NOAA SWPC solar regions | 3 hr | Active solar region count. |
 | hamqsl.com | 3 hr | Solar indices, HF band conditions, VHF, aurora. |
+| kc2g ionosonde | 15 min | North America 6m sporadic-E outlook, derived from foEs. |
 
 The coordinator keeps previous values when an upstream source has a temporary failure after a successful fetch. It records source freshness timestamps for successful NOAA and hamqsl fetches.
+
+Each 15-minute source has a circuit breaker: after 3 consecutive failures the source is skipped for 1 hour, then retried. hamqsl and solar regions are not covered by the breaker.
 
 ### MUF Coordinator
 
@@ -74,7 +77,7 @@ Diagnostics are exported through `diagnostics.py` and redact sensitive or user-s
 
 ## Repairs
 
-Repair issues are used for stale station data and source freshness problems that require user awareness. MUF station repair messages include station name, station code, and last reported station time so the user can decide whether to reconfigure.
+Repair issues are used for stale station data and source freshness problems that require user awareness. The Solar coordinator raises a `stale_noaa` repair when NOAA X-ray data has not been fetched for over an hour and clears it on the next successful fetch. MUF station repair messages include station name, station code, and last reported station time so the user can decide whether to reconfigure.
 
 ## Tests
 
@@ -91,5 +94,5 @@ Tests live in `tests/` and cover:
 Run the suite with:
 
 ```bash
-pytest --asyncio-mode=auto tests/
+uv run pytest --asyncio-mode=auto tests/
 ```

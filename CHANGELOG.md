@@ -2,7 +2,17 @@
 
 ## [Unreleased]
 
-No unreleased changes.
+### Fixed
+
+- The bundled 6m automations never fired. They triggered on `to: "Yes"`, which hamqsl does not publish. `6m_eskip_open.yml` now watches `solar_vhf_eskip_na_6m` for `50MHz ES`, and `6m_aurora_open.yml` fires when VHF aurora leaves `Band Closed`.
+- README example automation used `to: "Good"`, which never matched because band states are lowercase (`good`). The docs now list the actual state values.
+- README badges and links work when HACS renders the README: the License badge image was mangled by HACS's relative-link rewriting, and relative doc links did not resolve in older HACS versions.
+- Docs updates: HACS 2.x install steps and an "Open in HACS" button, kc2g foEs polling interval, NOAA staleness repair and circuit breaker behavior, `uv run` development commands (mypy removed), and the missing `solar_vhf_eskip_na_6m` sensor row.
+
+### Added
+
+- Release, CI, Hassfest, and HACS validation badges in the README.
+- `automations/pre-2024.10/` with copies of the bundled automations in the pre-2024.10 syntax for Home Assistant 2024.5 through 2024.9. The README examples use the 2024.10 syntax and explain the older keys.
 
 ## [2.3.1] - 2026-08-28
 
