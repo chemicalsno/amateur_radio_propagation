@@ -14,6 +14,10 @@
 - Release, CI, Hassfest, and HACS validation badges in the README.
 - `automations/pre-2024.10/` with copies of the bundled automations in the pre-2024.10 syntax for Home Assistant 2024.5 through 2024.9. The README examples use the 2024.10 syntax and explain the older keys.
 
+### Changed
+
+- Development and CI now require Python 3.12 or later. The Python 3.11 test job ran Home Assistant 2024.3.3, below the supported 2024.5.0 minimum, and broke on the `ubuntu-26.04` runner image because its time zone database lacks `US/Pacific`.
+
 ## [2.3.1] - 2026-08-28
 
 ### Fixed
