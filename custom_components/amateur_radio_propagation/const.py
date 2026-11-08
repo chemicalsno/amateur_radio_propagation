@@ -208,8 +208,6 @@ SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
         key="solar_sig_noise_lvl",
         translation_key="solar_sig_noise_lvl",
         name="HF Conditions Noise Level",
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=0,
     ),
     SensorEntityDescription(
         key="solar_fof2",
