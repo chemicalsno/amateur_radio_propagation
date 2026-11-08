@@ -21,6 +21,8 @@ from custom_components.amateur_radio_propagation.const import (
 )
 from custom_components.amateur_radio_propagation.coordinator_muf import MufCoordinator
 from custom_components.amateur_radio_propagation.coordinator_solar import (
+    _HAMQSL_NUMERIC_KEYS,
+    _HAMQSL_SCALAR_KEYS,
     SolarCoordinator,
 )
 from custom_components.amateur_radio_propagation.sensor import (
@@ -135,3 +137,19 @@ async def test_muf_extra_state_attributes_include_kc2g_freshness(
     sensor = HamRadioSensor(coordinator, entry, _muf_descriptions("BC840")[0])
 
     assert sensor.extra_state_attributes["source_updated_kc2g"] == kc2g_time.isoformat()
+
+
+def test_hamqsl_text_fields_are_not_declared_numeric() -> None:
+    """HA rejects text states on sensors it treats as numeric."""
+    text_keys = {
+        data_key
+        for xml_tag, data_key in _HAMQSL_SCALAR_KEYS.items()
+        if xml_tag not in _HAMQSL_NUMERIC_KEYS
+    }
+    assert "solar_sig_noise_lvl" in text_keys
+    for key in text_keys:
+        description = _description(key)
+        assert description.device_class is None, key
+        assert description.state_class is None, key
+        assert description.native_unit_of_measurement is None, key
+        assert description.suggested_display_precision is None, key

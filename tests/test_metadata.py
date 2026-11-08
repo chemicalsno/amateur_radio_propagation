@@ -270,3 +270,10 @@ def test_translation_placeholders_match_base_strings(translation_path: Path) -> 
         assert _placeholders(translation_leaves[path]) == _placeholders(base_value), (
             path
         )
+
+
+def test_english_translation_matches_base_strings() -> None:
+    """HA serves translations/en.json, so it must not drift from strings.json."""
+    assert _load_json(TRANSLATIONS / "en.json") == _load_json(
+        INTEGRATION / "strings.json"
+    )
