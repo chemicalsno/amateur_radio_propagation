@@ -146,7 +146,7 @@ def test_hamqsl_text_fields_are_not_declared_numeric() -> None:
         for xml_tag, data_key in _HAMQSL_SCALAR_KEYS.items()
         if xml_tag not in _HAMQSL_NUMERIC_KEYS
     }
-    assert text_keys
+    assert "solar_sig_noise_lvl" in text_keys
     for key in text_keys:
         description = _description(key)
         assert description.device_class is None, key
