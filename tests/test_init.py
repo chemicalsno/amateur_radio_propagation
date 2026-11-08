@@ -41,6 +41,29 @@ async def test_solar_setup_and_unload(hass):
     assert entry.state is ConfigEntryState.NOT_LOADED
 
 
+async def test_solar_text_sensor_writes_state(hass):
+    """Noise Level holds hamqsl text such as S2-S3, which HA must accept."""
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={CHOICE: Choice.SOLAR},
+        title="Solar Data",
+        unique_id="Solar Data",
+    )
+    entry.add_to_hass(hass)
+
+    with patch(
+        "custom_components.amateur_radio_propagation.coordinator_solar."
+        "SolarCoordinator._async_update_data",
+        return_value={"solar_sig_noise_lvl": "S2-S3"},
+    ):
+        assert await hass.config_entries.async_setup(entry.entry_id) is True
+        await hass.async_block_till_done()
+
+    state = hass.states.get("sensor.amateur_radio_propagation_solar_sig_noise_lvl")
+    assert state is not None
+    assert state.state == "S2-S3"
+
+
 async def test_muf_setup_and_unload(hass):
     """MUF entry loads successfully and unloads cleanly (notification patched out)."""
     entry = MockConfigEntry(

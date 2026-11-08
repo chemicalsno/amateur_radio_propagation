@@ -8,6 +8,9 @@
 - README example automation used `to: "Good"`, which never matched because band states are lowercase (`good`). The docs now list the actual state values.
 - README badges and links work when HACS renders the README: the License badge image was mangled by HACS's relative-link rewriting, and relative doc links did not resolve in older HACS versions.
 - Docs updates: HACS 2.x install steps and an "Open in HACS" button, kc2g foEs polling interval, NOAA staleness repair and circuit breaker behavior, `uv run` development commands (mypy removed), and the missing `solar_vhf_eskip_na_6m` sensor row.
+- HF Conditions Noise Level never showed a value. It was declared as a numeric measurement, but hamqsl publishes text such as `S2-S3`, so Home Assistant rejected every update with a `ValueError`. The sensor is now a text sensor.
+- `defusedxml` is now declared in `manifest.json` `requirements`. The solar coordinator imports it, and it was only present because `default_config` pulls it in through `ssdp`.
+- The English `stale_noaa` repair text in `translations/en.json` now matches `strings.json`.
 
 ### Added
 

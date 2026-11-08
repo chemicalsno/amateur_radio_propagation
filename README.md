@@ -215,7 +215,7 @@ See [docs/ARCHITECTURE.md](https://github.com/chemicalsno/amateur_radio_propagat
 ## Requirements
 
 - Home Assistant 2024.5.0 or later
-- No extra runtime Python packages beyond Home Assistant's bundled stack
+- `defusedxml` (declared in `manifest.json`; Home Assistant installs it automatically, and most installs already have it through `default_config`)
 
 ## License
 

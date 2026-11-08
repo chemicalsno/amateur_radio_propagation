@@ -29,4 +29,4 @@ Surfaces real-time amateur radio propagation data as Home Assistant sensors.
 ## Requirements
 
 - Home Assistant 2024.5.0 or later
-- No additional packages required
+- `defusedxml`, installed automatically by Home Assistant
