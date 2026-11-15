@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- CI now also runs the tests on Python 3.14, which installs Home Assistant 2026.5.1. The Python 3.12 job keeps covering Home Assistant 2024.12.5.
+
 ## [2.3.3] - 2026-11-14
 
 ### Fixed
