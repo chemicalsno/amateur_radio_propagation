@@ -138,8 +138,8 @@ class MufCoordinator(DataUpdateCoordinator[dict[str, Any]]):  # type: ignore[mis
         for field, suffix in _KC2G_STATION_FIELDS:
             data[f"solar_hf_{suffix}_{station_code}"] = record.get(field)
 
-        stale_hours = self._entry.options.get(
-            OPTION_STALE_HOURS, OPTION_STALE_HOURS_DEFAULT
+        stale_hours = int(
+            self._entry.options.get(OPTION_STALE_HOURS, OPTION_STALE_HOURS_DEFAULT)
         )
         issue_id = f"stale_{station_code}"
         if _kc2g_is_stale(record, timedelta(hours=stale_hours)):

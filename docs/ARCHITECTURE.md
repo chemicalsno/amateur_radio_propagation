@@ -51,7 +51,7 @@ Each 15-minute source has a circuit breaker: after 3 consecutive failures the so
 
 `MufCoordinator` polls kc2g station data every 30 minutes for one station. It maps fields from the kc2g station record into station-specific keys such as `solar_hf_muf_<station>`.
 
-If a station record is older than the configured stale threshold, the coordinator creates a Home Assistant repair issue. The default stale threshold is 3 hours and can be adjusted in entry options.
+If a station record is older than the configured stale threshold, the coordinator creates a Home Assistant repair issue. The default stale threshold is 24 hours, because ionosondes often stop reporting for hours and then resume. It can be set from 1 to 72 hours in entry options.
 
 ## Parsing And Error Handling
 

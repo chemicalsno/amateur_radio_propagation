@@ -7,6 +7,7 @@ import json
 import logging
 import math
 import re
+from datetime import datetime
 from http import HTTPStatus
 from typing import Any
 
@@ -21,7 +22,8 @@ from homeassistant.config_entries import (
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.selector import selector
+from homeassistant.helpers.selector import SelectOptionDict, selector
+from homeassistant.util import dt as dt_util
 
 from .const import (
     CHOICE,
@@ -39,6 +41,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 _STATION_LABEL_RE = re.compile(r"^(.+?)\s+\[([^\[\]]+)\]$")
+_STALE_HOURS_CHOICES = (1, 2, 3, 6, 12, 24, 48, 72)
 ConfigFlowResult = Any
 
 
@@ -77,8 +80,32 @@ def _parse_station_label(raw: str) -> tuple[str, str]:
     return station_name, station_code
 
 
-async def async_station_list_kc2g(hass: HomeAssistant) -> list[str]:
-    """Fetch kc2g ionosonde stations, return display strings sorted by distance."""
+def _last_data_suffix(raw_time: Any, now: datetime) -> str:
+    """Return a label suffix saying when a station last reported."""
+    if not isinstance(raw_time, str):
+        return ""
+    try:
+        parsed = dt_util.parse_datetime(raw_time)
+    except ValueError:
+        return ""
+    if parsed is None:
+        return ""
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=dt_util.UTC)
+    hours = int((now - parsed).total_seconds() // 3600)
+    if hours < 1:
+        return " (last data <1 h ago)"
+    if hours < 48:
+        return f" (last data {hours} h ago)"
+    return f" (last data {parsed.date().isoformat()})"
+
+
+async def async_station_list_kc2g(hass: HomeAssistant) -> list[SelectOptionDict]:
+    """Fetch kc2g ionosonde stations as selector options sorted by distance.
+
+    Stations often stop reporting for hours to months and then resume, so
+    every station stays listed and the label shows when it last reported.
+    """
     websession = async_get_clientsession(hass)
     try:
         async with asyncio.timeout(REQUEST_TIMEOUT):
@@ -98,7 +125,8 @@ async def async_station_list_kc2g(hass: HomeAssistant) -> list[str]:
 
     user_lat = hass.config.latitude
     user_lon = hass.config.longitude
-    stations: list[tuple[float, str]] = []
+    now = dt_util.utcnow()
+    stations: list[tuple[float, SelectOptionDict]] = []
 
     for entry in entries:
         station = entry.get("station") if isinstance(entry, dict) else None
@@ -114,10 +142,12 @@ async def async_station_list_kc2g(hass: HomeAssistant) -> list[str]:
             distance = _haversine(user_lat, user_lon, lat, lon)
         except (TypeError, ValueError, KeyError):
             distance = float("inf")
-        stations.append((distance, f"{name} [{code}]"))
+        value = f"{name} [{code}]"
+        label = value + _last_data_suffix(entry.get("time"), now)
+        stations.append((distance, SelectOptionDict(value=value, label=label)))
 
     stations.sort(key=lambda item: item[0])
-    return [label for _, label in stations]
+    return [option for _, option in stations]
 
 
 def _muf_station_configured(
@@ -319,25 +349,29 @@ class HamRadioOptionsFlow(OptionsFlow):  # type: ignore[misc]
             return self.async_abort(reason="no_options")
 
         if user_input is not None:
-            return self.async_create_entry(data=user_input)
+            return self.async_create_entry(
+                data={OPTION_STALE_HOURS: int(user_input[OPTION_STALE_HOURS])}
+            )
 
-        current_hours = self._entry.options.get(
-            OPTION_STALE_HOURS, OPTION_STALE_HOURS_DEFAULT
+        current_hours = int(
+            self._entry.options.get(OPTION_STALE_HOURS, OPTION_STALE_HOURS_DEFAULT)
         )
+        # The select selector only accepts string option values.
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Optional(OPTION_STALE_HOURS, default=current_hours): selector(
+                    vol.Optional(
+                        OPTION_STALE_HOURS, default=str(current_hours)
+                    ): selector(
                         {
                             "select": {
                                 "options": [
-                                    {"value": 1, "label": "1 hour"},
-                                    {"value": 2, "label": "2 hours"},
-                                    {"value": 3, "label": "3 hours"},
-                                    {"value": 6, "label": "6 hours"},
-                                    {"value": 12, "label": "12 hours"},
-                                    {"value": 24, "label": "24 hours"},
+                                    {
+                                        "value": str(hours),
+                                        "label": f"{hours} hour{'s' if hours > 1 else ''}",
+                                    }
+                                    for hours in _STALE_HOURS_CHOICES
                                 ],
                                 "mode": "dropdown",
                             }

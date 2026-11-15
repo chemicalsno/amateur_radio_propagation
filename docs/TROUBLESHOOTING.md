@@ -18,15 +18,15 @@ A repair issue appears when station data is older than the configured stale thre
 
 Common causes:
 
-- The ionosonde station is offline.
+- The ionosonde station has a reporting gap. Gaps of hours to days are common, and stations sometimes resume after months.
 - The kc2g feed has not received a fresh station report.
 - The selected station is no longer present in the feed.
 
 Actions:
 
 - Open **Settings -> Repairs** and review the station name, station code, and last reported time.
-- Use **Reconfigure** on the MUF entry to choose a different station.
-- Adjust the stale threshold in the entry options if your station commonly reports less frequently.
+- Use **Reconfigure** on the MUF entry to choose a different station. Each station in the list shows when it last reported.
+- Adjust the stale threshold (1 to 72 hours, default 24) in the entry options if your station commonly reports less frequently.
 
 ## Solar Data Stopped Updating
 
