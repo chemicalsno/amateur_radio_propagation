@@ -36,7 +36,7 @@ DASHBOARD_NOTIFIED: Final = "dashboard_notified"
 # Config entry options keys
 # ---------------------------------------------------------------------------
 OPTION_STALE_HOURS: Final = "stale_hours"
-OPTION_STALE_HOURS_DEFAULT: Final = 3
+OPTION_STALE_HOURS_DEFAULT: Final = 24
 
 
 class Choice(StrEnum):
@@ -94,7 +94,7 @@ ATTRIBUTION_MUF: Final = (
 POLL_INTERVAL_NOAA: Final = timedelta(minutes=15)
 POLL_INTERVAL_HAMQSL: Final = timedelta(hours=3)
 POLL_INTERVAL_MUF: Final = timedelta(minutes=30)
-KC2G_STALE_THRESHOLD: Final = timedelta(hours=3)
+KC2G_STALE_THRESHOLD: Final = timedelta(hours=OPTION_STALE_HOURS_DEFAULT)
 
 # --- North America 6m sporadic-E, derived from kc2g ionosonde foEs ---
 # hamqsl only publishes band-specific Es for Europe, so the NA 6m outlook is

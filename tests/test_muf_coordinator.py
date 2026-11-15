@@ -32,8 +32,10 @@ STATION_CODE_VAL = "BC840"
 
 # Fresh record: timestamp is now
 _FRESH_TIME = dt_util.utcnow().isoformat()
-# Stale record: timestamp is 4 hours ago
-_STALE_TIME = (dt_util.utcnow() - timedelta(hours=4)).isoformat()
+# Stale record: timestamp is 30 hours ago
+_STALE_TIME = (dt_util.utcnow() - timedelta(hours=30)).isoformat()
+# Short reporting gap: timestamp is 4 hours ago
+_SHORT_GAP_TIME = (dt_util.utcnow() - timedelta(hours=4)).isoformat()
 
 KC2G_FRESH = json.dumps(
     [
@@ -88,6 +90,8 @@ KC2G_STALE = json.dumps(
         }
     ]
 )
+
+KC2G_SHORT_GAP = json.dumps([{**json.loads(KC2G_STALE)[0], "time": _SHORT_GAP_TIME}])
 
 KC2G_NO_STATION = json.dumps(
     [{"station": {"code": "OTHER", "name": "Other"}, "mufd": 10.0, "time": _FRESH_TIME}]
@@ -179,7 +183,7 @@ async def test_fresh_data_deletes_issue(hass):
 
 
 async def test_stale_data_creates_issue(hass):
-    """Stale station data (>3 hr old) creates a repair issue."""
+    """Stale station data (>24 hr old) creates a repair issue."""
     coordinator = MufCoordinator(hass, _make_entry(hass))
     with (
         patch.object(coordinator, "_fetch_text", return_value=KC2G_STALE),
@@ -199,7 +203,7 @@ async def test_stale_data_creates_issue(hass):
 
 async def test_stale_option_threshold_is_honored(hass: HomeAssistant) -> None:
     """A station older than the default but newer than the option stays fresh."""
-    coordinator = MufCoordinator(hass, _make_entry(hass, {OPTION_STALE_HOURS: 6}))
+    coordinator = MufCoordinator(hass, _make_entry(hass, {OPTION_STALE_HOURS: 48}))
     with (
         patch.object(coordinator, "_fetch_text", return_value=KC2G_STALE),
         patch(
@@ -209,6 +213,28 @@ async def test_stale_option_threshold_is_honored(hass: HomeAssistant) -> None:
     ):
         await coordinator._async_update_data()
 
+    mock_delete.assert_called_once_with(
+        hass, "amateur_radio_propagation", "stale_BC840"
+    )
+
+
+async def test_short_reporting_gap_does_not_create_issue(hass: HomeAssistant) -> None:
+    """A gap of a few hours is normal for ionosondes and raises no repair."""
+    coordinator = MufCoordinator(hass, _make_entry(hass))
+    with (
+        patch.object(coordinator, "_fetch_text", return_value=KC2G_SHORT_GAP),
+        patch(
+            "custom_components.amateur_radio_propagation.coordinator_muf."
+            "async_create_issue"
+        ) as mock_create,
+        patch(
+            "custom_components.amateur_radio_propagation.coordinator_muf."
+            "async_delete_issue"
+        ) as mock_delete,
+    ):
+        await coordinator._async_update_data()
+
+    mock_create.assert_not_called()
     mock_delete.assert_called_once_with(
         hass, "amateur_radio_propagation", "stale_BC840"
     )

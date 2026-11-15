@@ -38,7 +38,7 @@ The integration supports two entry types:
 | Solar Data | Global solar, space-weather, HF/VHF, and aurora sensors. Only one Solar Data entry can be configured. |
 | MUF Station | Ionosonde data from one kc2g station. Add one entry per station. |
 
-MUF stations are sorted by distance from your Home Assistant location. To change stations later, use **Reconfigure** on the MUF entry.
+MUF stations are sorted by distance from your Home Assistant location, and each one shows when it last reported. Stations often pause for hours to months and then resume, so none are hidden. To change stations later, use **Reconfigure** on the MUF entry.
 
 ## Sensors
 

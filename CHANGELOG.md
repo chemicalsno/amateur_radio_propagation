@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- The MUF entry options form (**Configure**) failed to open, so the stale data threshold could not be changed. The form used integer option values, which Home Assistant's select selector rejects.
+- The "Ionosonde station data is stale" repair appeared for normal reporting gaps. The default stale threshold is now 24 hours instead of 3, and the options offer 48 and 72 hours. Entries that never saved a threshold use the new default.
+
+### Changed
+
+- The MUF station list shows when each station last reported, for example `Idaho Natl Lab, ID, USA [IF843] (last data 2026-11-09)`. Every station stays listed, because stations often pause and then resume.
+
 ## [2.3.2] - 2026-11-14
 
 ### Fixed

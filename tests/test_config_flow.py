@@ -3,17 +3,20 @@
 from __future__ import annotations
 
 import json
+from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
 from homeassistant.config_entries import SOURCE_USER
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
+from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.amateur_radio_propagation.const import (
     CHOICE,
     DOMAIN,
+    OPTION_STALE_HOURS,
     STATION_CODE,
     USER_STATION_CODE,
     Choice,
@@ -356,4 +359,65 @@ async def test_station_list_sorted_by_distance(hass: HomeAssistant) -> None:
     ):
         stations = await async_station_list_kc2g(hass)
 
-    assert stations == ["Near [NEAR]", "Far [FAR]"]
+    assert [station["value"] for station in stations] == ["Near [NEAR]", "Far [FAR]"]
+
+
+async def test_station_list_labels_show_last_data(hass: HomeAssistant) -> None:
+    """Labels show when each station last reported; values stay parseable."""
+    recent = (dt_util.utcnow() - timedelta(hours=5, minutes=20)).isoformat()
+    payload = json.dumps(
+        [
+            {
+                "station": {"code": "NOW", "name": "Now"},
+                "time": dt_util.utcnow().isoformat(),
+            },
+            {"station": {"code": "GAP", "name": "Gap"}, "time": recent},
+            {"station": {"code": "OLD", "name": "Old"}, "time": "2024-04-16T16:15:05"},
+            {"station": {"code": "BAD", "name": "Bad"}, "time": "not a time"},
+            {"station": {"code": "NONE", "name": "None"}},
+        ]
+    )
+
+    with patch(
+        "custom_components.amateur_radio_propagation.config_flow.async_get_clientsession",
+        return_value=_Session(_Response(payload)),
+    ):
+        stations = await async_station_list_kc2g(hass)
+
+    labels = {station["value"]: station["label"] for station in stations}
+    assert labels == {
+        "Now [NOW]": "Now [NOW] (last data <1 h ago)",
+        "Gap [GAP]": "Gap [GAP] (last data 5 h ago)",
+        "Old [OLD]": "Old [OLD] (last data 2024-04-16)",
+        "Bad [BAD]": "Bad [BAD]",
+        "None [NONE]": "None [NONE]",
+    }
+
+
+async def test_muf_options_stale_threshold_round_trip(hass):
+    """The options form renders, defaults to 24 hours, and saves an integer."""
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={CHOICE: Choice.MUF, STATION_CODE: "BC840"},
+        title="Boulder",
+        unique_id="Boulder [BC840]",
+    )
+    entry.add_to_hass(hass)
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+
+    assert result["type"] == FlowResultType.FORM
+    key = next(iter(result["data_schema"].schema))
+    assert key.default() == "24"
+    values = [
+        option["value"]
+        for option in result["data_schema"].schema[key].config["options"]
+    ]
+    assert values[-2:] == ["48", "72"]
+
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], user_input={OPTION_STALE_HOURS: "48"}
+    )
+
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert entry.options == {OPTION_STALE_HOURS: 48}
